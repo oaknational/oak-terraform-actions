@@ -20,6 +20,12 @@ runs:
         cd ${{ inputs.terraform_base_dir }}
         find . -type f -name "backend.tf.template" -exec bash -c 'cp "$0" "${0%.template}"' {} \;
 
+    - name: Generate terraform.tfvars from terraform.tfvars.example
+      shell: bash
+      run: |
+        cd ${{ inputs.terraform_base_dir }}
+        find . -type f -name "terraform.tfvars.example" -exec bash -c 'cp "$0" "${0%.example}"' {} \;
+
     - name: Check for .tflint.hcl file
       shell: bash
       run: |

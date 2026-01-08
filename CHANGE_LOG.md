@@ -1,3 +1,11 @@
+# [1.3.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.2.0...v1.3.0) (2026-01-08)
+
+
+### Features
+
+* add Terraform Cloud drift detection with Slack notifications ([4fa78be](https://github.com/oaknational/oak-terraform-actions/commit/4fa78bec20fe4716a44d3856a4892e4099852943))
+* set up tfvar files where examples exist ([5bf0f26](https://github.com/oaknational/oak-terraform-actions/commit/5bf0f265ae4b23b56878266fd144975a54468e43))
+
 # [1.1.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.0.0...v1.1.0) (2024-09-25)
 
 

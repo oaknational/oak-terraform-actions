@@ -1,3 +1,10 @@
+# [1.4.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.3.0...v1.4.0) (2026-01-29)
+
+
+### Features
+
+* ignore vercel_deployment in drift detection ([7453102](https://github.com/oaknational/oak-terraform-actions/commit/74531028e29e7209fe1b94d9cf45916fcbf4d175))
+
 # [1.3.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.2.0...v1.3.0) (2026-01-08)
 
 

@@ -13,8 +13,11 @@ inputs:
     required: true
   TF_BASE_DIRECTORY:
     default: "infrastructure/project"
-  SLACK_WEBHOOK_URL:
-    description: 'Slack webhook URL for notifications'
+  SLACK_BOT_TOKEN:
+    description: 'Slack bot token for notifications'
+    required: true
+  VERCEL_DRIFT_SLACK_CHANNEL_ID:
+    description: 'Slack channel ID to send drift alerts to'
     required: true
 
 runs:
@@ -80,6 +83,7 @@ runs:
 
         PAYLOAD=$(cat <<-EOF
         {
+            "channel": "${{ inputs.VERCEL_DRIFT_SLACK_CHANNEL_ID }}",
             "text": "🚨 Terraform Drift Detected",
             "blocks": [
               {
@@ -153,6 +157,7 @@ runs:
         echo "Generated Payload:"
         echo "$PAYLOAD"
 
-        curl -X POST \
-          -H 'Content-type: application/json' \
-          --data "${PAYLOAD}" ${{ inputs.SLACK_WEBHOOK_URL }}
+        curl -X POST https://slack.com/api/chat.postMessage \
+        -H "Authorization: Bearer ${{ inputs.SLACK_BOT_TOKEN }}" \
+        -H 'Content-type: application/json; charset=utf-8' \
+        --data "${PAYLOAD}"

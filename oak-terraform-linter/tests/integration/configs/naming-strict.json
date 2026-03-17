@@ -1,0 +1,11 @@
+{
+  "rules": [
+    {
+      "ruleType": "naming-convention",
+      "enabled": true,
+      "params": {
+        "pattern": "^[a-z0-9_]+$"
+      }
+    }
+  ]
+}

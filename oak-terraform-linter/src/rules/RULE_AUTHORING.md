@@ -1,0 +1,96 @@
+# Rule Authoring Guide
+
+## Overview
+
+Rules are TypeScript classes that implement the `Rule` interface. They validate Terraform configurations against specific requirements.
+
+## Rule Interface
+
+```typescript
+interface Rule {
+  id: string;
+  name: string;
+  description: string;
+  severity: "error" | "warning" | "info";
+  params?: Record<string, unknown>;
+  validate(
+    context: TerraformFileContext,
+    executionContext: ExecutionContext,
+    params?: Record<string, unknown>
+  ): LintViolation[];
+}
+```
+
+## Creating a Custom Rule
+
+### Step 1: Create the Rule Class
+
+```typescript
+import {
+  Rule,
+  TerraformFileContext,
+  ExecutionContext,
+  LintViolation,
+} from "../core/types";
+
+export class MyCustomRule implements Rule {
+  id = "custom-my-rule-001";
+  name = "My Custom Rule";
+  description = "Description of what this rule checks";
+  severity = "error" as const;
+  params: Record<string, unknown> = {};
+
+  validate(
+    context: TerraformFileContext,
+    executionContext: ExecutionContext,
+    params?: Record<string, unknown>
+  ): LintViolation[] {
+    const violations: LintViolation[] = [];
+
+    // Your validation logic here
+    // Parse context and executionContext to generate violations
+
+    return violations;
+  }
+}
+```
+
+### Step 2: Register the Rule
+
+Add your rule to `src/rules` and update `AVAILABLE_RULES` in `src/rules/loader.ts`:
+
+```typescript
+import { MyCustomRule } from "./my-custom";
+
+const AVAILABLE_RULES: Record<string, new () => Rule> = {
+  "naming-convention": NamingConventionRule,
+  "my-custom": MyCustomRule,
+};
+```
+
+### Step 3: Configure the Rule
+
+Once added to `AVAILABLE_RULES` your new rule will be run by default. However if a configuration file is passed to the linter you will need to add it to the config:
+
+```json
+{
+  "rules": [
+    {
+      "ruleType": "my-custom",
+      "enabled": true,
+      "params": {
+        "option1": "value1"
+      }
+    }
+  ]
+}
+```
+
+## Best Practices
+
+1. **Clear IDs**: Use format `{organization}-{rule-name}-{version}` (e.g., `oak-naming-001`)
+1. **Clear Filenames** Use format `rule-{rule-name}.ts`
+1. **Helpful Messages**: Violation messages should clearly explain what's wrong
+1. **Suggestions**: Provide actionable suggestions when possible
+1. **Error Handling**: Gracefully handle unexpected JSON structures from the parser
+1. **Documentation**: Add descriptions explaining the rule's purpose

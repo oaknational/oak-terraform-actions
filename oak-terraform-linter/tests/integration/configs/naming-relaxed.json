@@ -1,0 +1,8 @@
+{
+  "rules": [
+    {
+      "ruleType": "naming-convention",
+      "enabled": false
+    }
+  ]
+}

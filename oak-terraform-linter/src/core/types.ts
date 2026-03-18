@@ -27,7 +27,6 @@ export interface LintResult {
 export interface RuleConfig {
   ruleType: string;
   enabled?: boolean;
-  description?: string;
   params?: Record<string, unknown>;
 }
 

@@ -2,7 +2,6 @@
   "rules": [
     {
       "ruleType": "naming-convention",
-      "description": "This will overwrite the default rule description if set (optional).",
       "enabled": true
     }
   ]

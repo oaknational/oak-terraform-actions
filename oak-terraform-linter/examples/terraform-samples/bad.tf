@@ -6,7 +6,7 @@ resource "aws_vpc" "InvalidVpcName" {
   }
 }
 
-resource "aws_subnet" "BadSubnetName" {
+resource "aws_subnet" "Bad-Subnet-Name" {
   vpc_id            = aws_vpc.InvalidVpcName.id
   cidr_block        = "10.0.1.0/24"
   availability_zone = "us-east-1a"

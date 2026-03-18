@@ -44,10 +44,6 @@ export class RuleLoader {
 
         const rule = new ruleClass();
 
-        if (config.description) {
-          rule.description = config.description;
-        }
-
         if (config.params) {
           rule.params = { ...rule.params, ...config.params };
         }

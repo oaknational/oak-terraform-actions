@@ -79,26 +79,6 @@ describe("RuleLoader", () => {
     await expect(loader.loadRulesFromFile(configPath)).rejects.toThrow();
   });
 
-  test("overwrites default description if provided in config", async () => {
-    const configPath = path.join(tempDir, "rules.json");
-    const customDescription = "Custom description for naming convention rule.";
-    const config = {
-      rules: [
-        {
-          ruleType: "naming-convention",
-          enabled: true,
-          description: customDescription,
-        },
-      ],
-    };
-    fs.writeFileSync(configPath, JSON.stringify(config));
-
-    const loader = new RuleLoader();
-    const rules = await loader.loadRulesFromFile(configPath);
-    expect(rules).toHaveLength(1);
-    expect(rules[0].description).toBe(customDescription);
-  });
-
   test("loads custom params into rule from config", async () => {
     const configPath = path.join(tempDir, "rules.json");
     const config = {

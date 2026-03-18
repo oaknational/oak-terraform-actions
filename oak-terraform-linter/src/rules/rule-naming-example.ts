@@ -3,7 +3,7 @@ import { Rule, TerraformFileContext, ExecutionContext, LintViolation } from "../
 export class NamingConventionRule implements Rule {
   id = "oak-naming-001";
   name = "Resource Naming Convention";
-  description = "Enforce snake_case naming for all resources";
+  description = "Enforce naming for all resources";
   severity = "error" as const;
   params: Record<string, unknown> = {};
 
@@ -13,9 +13,11 @@ export class NamingConventionRule implements Rule {
     params?: Record<string, unknown>
   ): LintViolation[] {
     const violations: LintViolation[] = [];
-    const patternParam = params?.pattern || /^[a-z0-9_]+$/;
+    const snakeCasePattern = /^[a-z0-9_]+$/;
+    const patternParam = params?.pattern || snakeCasePattern;
     const pattern =
       typeof patternParam === "string" ? new RegExp(patternParam) : (patternParam as RegExp);
+    const isSnakeCase = snakeCasePattern === pattern;
 
     const resources = context.hcl.resource;
     if (!resources || typeof resources !== "object") {
@@ -37,11 +39,13 @@ export class NamingConventionRule implements Rule {
             ruleId: this.id,
             ruleName: this.name,
             severity: this.severity,
-            message: `Resource name '${resourceName}' does not match naming convention. Use snake_case (lowercase letters, numbers, underscores).`,
+            message: isSnakeCase
+              ? `Resource name '${resourceName}' does not match naming convention 'snake_case'.`
+              : `Resource name '${resourceName}' does not match naming convention '${pattern}'.`,
             filePath: context.filePath,
-            suggestion: `Rename to match pattern: ${resourceName
-              .toLowerCase()
-              .replace(/[^a-z0-9_]/g, "_")}`,
+            suggestion: isSnakeCase
+              ? `Rename to match pattern: ${resourceName.toLowerCase().replace(/[^a-z0-9_]/g, "_")}`
+              : "",
           });
         }
       }

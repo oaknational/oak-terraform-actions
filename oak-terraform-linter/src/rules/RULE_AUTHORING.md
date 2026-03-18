@@ -25,13 +25,10 @@ interface Rule {
 
 ### Step 1: Create the Rule Class
 
+The Rule Engine will loop through all `.tf` files found in the linter's target path and call your rule's `validate` function on each one.
+
 ```typescript
-import {
-  Rule,
-  TerraformFileContext,
-  ExecutionContext,
-  LintViolation,
-} from "../core/types";
+import { Rule, TerraformFileContext, ExecutionContext, LintViolation } from "../core/types";
 
 export class MyCustomRule implements Rule {
   id = "custom-my-rule-001";
@@ -47,8 +44,11 @@ export class MyCustomRule implements Rule {
   ): LintViolation[] {
     const violations: LintViolation[] = [];
 
-    // Your validation logic here
-    // Parse context and executionContext to generate violations
+    // Your validation logic here.
+    // Parse context (information about a specific .tf file)
+    // and executionContext (e.g. if this is running in a private repo)
+    // to generate violations.
+    // See parser.ts for information on the structure of context.hcl
 
     return violations;
   }
@@ -68,9 +68,26 @@ const AVAILABLE_RULES: Record<string, new () => Rule> = {
 };
 ```
 
-### Step 3: Configure the Rule
+### Step 3: Decide if it should be added to the Default configuration
 
-Once added to `AVAILABLE_RULES` your new rule will be run by default. However if a configuration file is passed to the linter you will need to add it to the config:
+Update `DEFAULT_RULES` in `src/rules/loader.ts`:
+
+```typescript
+const DEFAULT_RULES: RuleConfig[] = [
+  {
+    ruleType: "my-custom",
+    enabled: true, // optional, true if omitted
+    params: {
+      // optional
+      option1: "value1",
+    },
+  },
+];
+```
+
+### Step 4: Add the Rule to an external config
+
+If added to `DEFAULT_RULES` your new rule will be run if no config file is passed. However if a configuration file (json) is passed to the linter you will need to make sure your new rule is included:
 
 ```json
 {

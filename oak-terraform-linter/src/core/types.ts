@@ -1,5 +1,9 @@
 export interface TerraformFileContext {
-  json: Record<string, unknown>;
+  /**
+   * The parsed HCL content as a JavaScript object.
+   * See parser.ts for details on the structure.
+   */
+  hcl: Record<string, unknown>;
   filePath: string;
   fileContent: string;
 }

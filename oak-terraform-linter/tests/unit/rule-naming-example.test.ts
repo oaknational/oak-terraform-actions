@@ -6,7 +6,7 @@ describe("NamingConventionRule", () => {
 
   test("detects invalid naming patterns", () => {
     const context: TerraformFileContext = {
-      json: {
+      hcl: {
         resource: {
           aws_s3_bucket: {
             InvalidName: {
@@ -26,7 +26,7 @@ describe("NamingConventionRule", () => {
 
   test("accepts valid naming patterns", () => {
     const context: TerraformFileContext = {
-      json: {
+      hcl: {
         resource: {
           aws_s3_bucket: {
             valid_name: {
@@ -45,7 +45,7 @@ describe("NamingConventionRule", () => {
 
   test("handles missing resources", () => {
     const context: TerraformFileContext = {
-      json: {},
+      hcl: {},
       filePath: "test.tf",
       fileContent: "",
     };
@@ -56,7 +56,7 @@ describe("NamingConventionRule", () => {
 
   test("provides suggestions for invalid names", () => {
     const context: TerraformFileContext = {
-      json: {
+      hcl: {
         resource: {
           aws_s3_bucket: {
             "Invalid-Name": {

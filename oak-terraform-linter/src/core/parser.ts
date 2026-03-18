@@ -9,11 +9,35 @@ export class TerraformParser {
     return this.parseContent(fileContent, filePath);
   }
 
+  /**
+   * Parses HCL content into a JavaScript object.
+   * We use @cdktf/hcl2json - see https://www.npmjs.com/package/@cdktf/hcl2json
+   *
+   * Example output structure for the parsed HCL object (note how config blocks are wrapped in arrays):
+   * ```json
+   * {
+   *   "resource": {
+   *     "aws_vpc": {
+   *       "main": [{ "cidr_block": "10.0.0.0/16" }]
+   *     }
+   *   },
+   *   "variable": {
+   *     "name": [
+   *       {
+   *         "description": "Name to be used on all resources",
+   *         "type": "${string}",
+   *         "default": ""
+   *       }
+   *     ]
+   *   }
+   * }
+   * ```
+   */
   async parseContent(content: string, filePath: string): Promise<TerraformFileContext> {
     try {
-      const json = await parse(filePath, content);
+      const parsed = await parse(filePath, content);
       return {
-        json,
+        hcl: parsed,
         filePath,
         fileContent: content,
       };
@@ -24,16 +48,14 @@ export class TerraformParser {
   }
 
   async parseDirectory(dirPath: string): Promise<TerraformFileContext[]> {
-    const contexts: TerraformFileContext[] = [];
     const files = this.findTerraformFiles(dirPath);
+    const concurrencyLimit = 10;
+    const contexts: TerraformFileContext[] = [];
 
-    for (const file of files) {
-      try {
-        contexts.push(await this.parseFile(file));
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.warn(`Warning: ${message}`);
-      }
+    for (let i = 0; i < files.length; i += concurrencyLimit) {
+      const batch = files.slice(i, i + concurrencyLimit);
+      const batchResults = await Promise.all(batch.map((file) => this.parseFile(file)));
+      contexts.push(...batchResults);
     }
 
     return contexts;

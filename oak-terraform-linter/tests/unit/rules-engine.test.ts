@@ -33,7 +33,7 @@ describe("RulesEngine", () => {
     engine.registerRule(new TestRule());
 
     const context: TerraformFileContext = {
-      json: {},
+      hcl: {},
       filePath: "test.tf",
       fileContent: "",
     };
@@ -44,13 +44,13 @@ describe("RulesEngine", () => {
 
   test("passes with no rules", () => {
     const engine = new RulesEngine();
-    
+
     const context: TerraformFileContext = {
-        json: {},
-        filePath: "test.tf",
-        fileContent: "",
+      hcl: {},
+      filePath: "test.tf",
+      fileContent: "",
     };
-    
+
     const violations = engine.executeRules(context, {});
     expect(violations).toHaveLength(0);
   });

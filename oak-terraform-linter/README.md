@@ -32,7 +32,7 @@ npm run linter -- --path ./path/to/terraform
 npm run linter -- --path ./path/to/terraform --rules ./path/to/my-rules.json
 ```
 
-### Strict Mode (fails on warning logs)
+### Strict Mode (fails on warnings)
 
 ```bash
 npm run linter -- --path ./path/to/terraform --strict
@@ -47,10 +47,10 @@ npm run linter -- --path ./path/to/terraform --strict
 
 The linter is built around four core components:
 
-1. **Parser** (`src/core/parser.ts`) - Converts HCL2 to JSON using @cdktf/hcl2json
-2. **Rules Engine** (`src/rules/engine.ts`) - Loads and executes rules against the parsed JSON
-3. **Rule Loader** (`src/rules/loader.ts`) - Instantiates rules from configuration files
+1. **Parser** (`src/core/parser.ts`) - Converts HCL to JSON using @cdktf/hcl2json
+2. **Rules Engine** (`src/rules/engine.ts`) - Loads and executes rules against the parsed HCL
+3. **Rule Loader** (`src/rules/loader.ts`) - Instantiates rules (optionally from configuration files)
 4. **Reporters** (`src/reporters/`) - Formats and outputs results
 
-Rules are implemented as TypeScript classes that process the parsed configuration JSON.
+Rules are implemented as TypeScript classes that process the parsed HCL.
 

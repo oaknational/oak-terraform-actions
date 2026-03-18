@@ -6,6 +6,8 @@ const AVAILABLE_RULES: Record<string, new () => Rule> = {
   "naming-convention": NamingConventionRule,
 };
 
+const DEFAULT_RULES: RuleConfig[] = [{ ruleType: "naming-convention" }];
+
 export class RuleLoader {
   async loadRulesFromFile(filePath: string): Promise<Rule[]> {
     try {
@@ -19,11 +21,7 @@ export class RuleLoader {
   }
 
   loadDefaultRules(): Rule[] {
-    const ruleConfigs: RuleConfig[] = Object.keys(AVAILABLE_RULES).map((ruleType) => ({
-      ruleType,
-      enabled: true,
-    }));
-    return this.instantiateRules(ruleConfigs);
+    return this.instantiateRules(DEFAULT_RULES);
   }
 
   private instantiateRules(configs: RuleConfig[]): Rule[] {
@@ -47,7 +45,7 @@ export class RuleLoader {
         const rule = new ruleClass();
 
         if (config.description) {
-            rule.description = config.description;
+          rule.description = config.description;
         }
 
         if (config.params) {

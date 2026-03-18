@@ -1,9 +1,4 @@
-import {
-  Rule,
-  TerraformFileContext,
-  ExecutionContext,
-  LintViolation,
-} from "../core/types";
+import { Rule, TerraformFileContext, ExecutionContext, LintViolation } from "../core/types";
 
 export class NamingConventionRule implements Rule {
   id = "oak-naming-001";
@@ -22,7 +17,7 @@ export class NamingConventionRule implements Rule {
     const pattern =
       typeof patternParam === "string" ? new RegExp(patternParam) : (patternParam as RegExp);
 
-    const resources = context.json.resource;
+    const resources = context.hcl.resource;
     if (!resources || typeof resources !== "object") {
       return violations;
     }

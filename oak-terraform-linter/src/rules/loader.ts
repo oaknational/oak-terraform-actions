@@ -55,7 +55,7 @@ export class RuleLoader {
         rules.push(rule);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        throw new Error(`Failed to instantiate rule: ${message}`);
+        throw new Error(`Failed to instantiate rule '${config.ruleType}': ${message}`);
       }
     }
 

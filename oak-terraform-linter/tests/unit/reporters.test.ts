@@ -79,4 +79,39 @@ describe("HumanReporter", () => {
     reporter.report(violations, { strict: false, fileCount: 1 });
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Use this instead"));
   });
+
+  test("handles info severity violations", () => {
+    const violations: LintViolation[] = [
+      {
+        ruleId: "rule-1",
+        ruleName: "Rule 1",
+        severity: "info",
+        message: "Info message",
+        filePath: "test.tf",
+      },
+    ];
+
+    reporter.report(violations, { strict: false, fileCount: 1 });
+    // Should print the info violation with ℹ icon
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Info message"));
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("ℹ"));
+  });
+
+  test("handles unknown severity gracefully", () => {
+    const violations: LintViolation[] = [
+      {
+        ruleId: "rule-1",
+        ruleName: "Rule 1",
+        severity: "unknown" as "error",
+        message: "Unknown severity",
+        filePath: "test.tf",
+      },
+    ];
+
+    // Should not throw and should output something
+    expect(() => {
+      reporter.report(violations, { strict: false, fileCount: 1 });
+    }).not.toThrow();
+    expect(consoleSpy).toHaveBeenCalled();
+  });
 });

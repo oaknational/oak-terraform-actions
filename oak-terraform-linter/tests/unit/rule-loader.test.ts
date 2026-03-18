@@ -98,4 +98,26 @@ describe("RuleLoader", () => {
     expect(rules).toHaveLength(1);
     expect(rules[0].description).toBe(customDescription);
   });
+
+  test("loads custom params into rule from config", async () => {
+    const configPath = path.join(tempDir, "rules.json");
+    const config = {
+      rules: [
+        {
+          ruleType: "naming-convention",
+          enabled: true,
+          params: {
+            pattern: "^[a-z_]+$",
+          },
+        },
+      ],
+    };
+    fs.writeFileSync(configPath, JSON.stringify(config));
+
+    const loader = new RuleLoader();
+    const rules = await loader.loadRulesFromFile(configPath);
+    expect(rules).toHaveLength(1);
+    expect(rules[0].params).toBeDefined();
+    expect((rules[0].params as Record<string, unknown>).pattern).toBe("^[a-z_]+$");
+  });
 });

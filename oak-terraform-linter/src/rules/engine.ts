@@ -21,13 +21,8 @@ export class RulesEngine {
     const violations: LintViolation[] = [];
 
     for (const rule of this.rules) {
-      try {
-        const ruleViolations = rule.validate(context, executionContext, rule.params);
-        violations.push(...ruleViolations);
-      } catch (error) {
-        const message = error instanceof Error ? error.message : String(error);
-        console.error(`Error executing rule ${rule.id}: ${message}`);
-      }
+      const ruleViolations = rule.validate(context, executionContext, rule.params);
+      violations.push(...ruleViolations);
     }
 
     return violations;

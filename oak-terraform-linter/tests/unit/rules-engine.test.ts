@@ -60,4 +60,33 @@ describe("RulesEngine", () => {
     engine.loadDefaultRules();
     expect(engine.getRules().length).toBeGreaterThan(0);
   });
+
+  test("throws errors during rule execution", () => {
+    const engine = new RulesEngine();
+
+    // Create a rule that throws an error
+    class FailingRule implements Rule {
+      id = "failing-rule";
+      name = "Failing Rule";
+      description = "A rule that fails";
+      severity = "error" as const;
+      params: Record<string, unknown> = {};
+
+      validate(): LintViolation[] {
+        throw new Error("Rule validation failed");
+      }
+    }
+
+    engine.registerRule(new FailingRule());
+
+    const context: TerraformFileContext = {
+      hcl: {},
+      filePath: "test.tf",
+      fileContent: "",
+    };
+
+    expect(() => {
+      engine.executeRules(context, {});
+    }).toThrow("Rule validation failed");
+  });
 });

@@ -38,6 +38,13 @@ npm run linter -- --path ./path/to/terraform --rules ./path/to/my-rules.json
 npm run linter -- --path ./path/to/terraform --strict
 ```
 
+### Production
+
+```bash
+npm run build
+node ./dist/index.js --path ./path/to/terraform --rules ./path/to/my-rules.json
+```
+
 ## Documentation
 
 - [Rule Authoring Guide](src/rules/RULE_AUTHORING.md) - Create custom rules

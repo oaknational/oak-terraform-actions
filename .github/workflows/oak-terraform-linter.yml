@@ -14,6 +14,7 @@ on:
 
 jobs:
   linter-ci:
+    name: Lint, test and build oak-terraform-linter
     runs-on: ubuntu-latest
 
     steps:

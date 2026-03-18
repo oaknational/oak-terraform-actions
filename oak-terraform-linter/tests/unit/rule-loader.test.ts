@@ -68,8 +68,7 @@ describe("RuleLoader", () => {
     fs.writeFileSync(configPath, JSON.stringify(config));
 
     const loader = new RuleLoader();
-    const rules = await loader.loadRulesFromFile(configPath);
-    expect(rules).toHaveLength(0);
+    await expect(loader.loadRulesFromFile(configPath)).rejects.toThrow();
   });
 
   test("throws on invalid JSON", async () => {

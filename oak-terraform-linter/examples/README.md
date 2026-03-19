@@ -12,4 +12,7 @@
 
 3. See the violations reported with suggestions.
 
-4. Create your own rules configuration based on these examples.
+4. To understand the parsed HCL2 structure (useful for creating rules):
+   ```bash
+   npm run parse -- --file ./examples/terraform-samples/bad.tf
+   ```

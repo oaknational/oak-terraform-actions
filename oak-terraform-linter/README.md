@@ -45,10 +45,19 @@ npm run build
 node ./dist/index.js --path ./path/to/terraform --rules ./path/to/my-rules.json
 ```
 
+### Inspect HCL2 JSON Structure
+
+```bash
+npm run parse -- --file ./your-terraform.tf
+```
+
+Use this to understand the parsed structure when authoring rules.
+
 ## Documentation
 
 - [Rule Authoring Guide](src/rules/RULE_AUTHORING.md) - Create custom rules
 - [Examples](examples/README.md) - Sample configurations and Terraform files
+- [Parse Command](src/commands/parse/README.md) - Parse any Terraform file and output it as JSON
 
 ## Architecture
 

@@ -45,10 +45,15 @@ export class MyCustomRule implements Rule {
     const violations: LintViolation[] = [];
 
     // Your validation logic here.
-    // Parse context (information about a specific .tf file)
-    // and executionContext (e.g. if this is running in a private repo)
+
+    // You can examine:
+    // - context: Information about a specific .tf file including parsed HCL.
+    // - executionContext: If this is running in a private repo etc. Please extend this as needed.
     // to generate violations.
-    // See parser.ts for information on the structure of context.hcl
+
+    // Check parser.ts for an example of the structure of the parsed HCL JSON so you know how to manipulate it.
+    // You can also use 'npm run parse' to output parsed HCL JSON of any terraform file. 
+    // See src/commands/parse/README.md for details.
 
     return violations;
   }

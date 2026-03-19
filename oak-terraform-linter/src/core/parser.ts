@@ -12,6 +12,7 @@ export class TerraformParser {
   /**
    * Parses HCL content into a JavaScript object.
    * We use @cdktf/hcl2json - see https://www.npmjs.com/package/@cdktf/hcl2json
+   * You can use the parse command in this package to see the exact output structure of the parser.
    *
    * Example output structure for the parsed HCL object (note how config blocks are wrapped in arrays):
    * ```json

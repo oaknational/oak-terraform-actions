@@ -41,7 +41,7 @@ npm run linter -- --path ./path/to/terraform --strict
 ### Production
 
 ```bash
-npm run build
+# assuming 'npm run build'
 node ./dist/index.js --path ./path/to/terraform --rules ./path/to/my-rules.json
 ```
 

@@ -2,7 +2,7 @@ import * as path from "path";
 import { TerraformParser } from "../../src/core/parser";
 import { RulesEngine } from "../../src/rules/engine";
 import { ExecutionContext } from "../../src/core/types";
-import { NamingConventionRule } from "../../src/rules/rule-naming-example";
+import { NamingConventionRule } from "../../src/rules/rule-resource-naming";
 
 describe("End-to-End Linting", () => {
   const parser = new TerraformParser();
@@ -18,7 +18,7 @@ describe("End-to-End Linting", () => {
     const allViolations = contexts.flatMap((ctx) => engine.executeRules(ctx, executionContext));
 
     expect(allViolations.length).toBeGreaterThan(0);
-    expect(allViolations[0].ruleId).toBe("oak-naming-001");
+    expect(allViolations[0].ruleId).toBe("oak-resource-naming-001");
   });
 
   test("passes clean Terraform files", async () => {
@@ -53,7 +53,7 @@ describe("End-to-End Linting", () => {
     const allViolations = contexts.flatMap((ctx) => engine.executeRules(ctx, executionContext));
 
     expect(allViolations.length).toBeGreaterThan(0);
-    expect(allViolations[0].ruleId).toBe("oak-naming-001");
+    expect(allViolations[0].ruleId).toBe("oak-resource-naming-001");
   });
 
   test("loads and respects disabled rules from config", async () => {

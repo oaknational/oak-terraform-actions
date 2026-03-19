@@ -1,4 +1,4 @@
-import { NamingConventionRule } from "../../src/rules/rule-naming-example";
+import { NamingConventionRule } from "../../src/rules/rule-resource-naming";
 import { TerraformFileContext } from "../../src/core/types";
 
 describe("NamingConventionRule", () => {

@@ -1,7 +1,7 @@
 import { Rule, TerraformFileContext, ExecutionContext, LintViolation } from "../core/types";
 
 export class NamingConventionRule implements Rule {
-  id = "oak-naming-001";
+  id = "oak-resource-naming-001";
   name = "Resource Naming Convention";
   description = "Enforce naming for all resources";
   severity = "error" as const;

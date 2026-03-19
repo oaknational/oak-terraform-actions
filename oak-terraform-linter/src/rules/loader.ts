@@ -1,16 +1,16 @@
 import * as fs from "fs";
 import { Rule, RuleConfig } from "../core/types";
-import { NamingConventionRule } from "./rule-naming-example";
+import { NamingConventionRule as ResourceNamingRule } from "./rule-resource-naming";
 import { HelperPassingRule, HelperFailingRule, HelperErrorRule } from "./rule-helpers";
 
 const AVAILABLE_RULES: Record<string, new () => Rule> = {
   "helper-always-passes": HelperPassingRule,
   "helper-always-fails": HelperFailingRule,
   "helper-always-errors": HelperErrorRule,
-  "naming-convention": NamingConventionRule,
+  "resource-naming": ResourceNamingRule,
 };
 
-const DEFAULT_RULES: RuleConfig[] = [{ ruleType: "naming-convention" }];
+const DEFAULT_RULES: RuleConfig[] = [{ ruleType: "resource-naming" }];
 
 export class RuleLoader {
   async loadRulesFromFile(filePath: string): Promise<Rule[]> {

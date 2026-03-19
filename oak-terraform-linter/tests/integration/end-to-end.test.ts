@@ -2,7 +2,7 @@ import * as path from "path";
 import { TerraformParser } from "../../src/core/parser";
 import { RulesEngine } from "../../src/rules/engine";
 import { ExecutionContext } from "../../src/core/types";
-import { NamingConventionRule } from "../../src/rules/rule-resource-naming";
+import { ResourceNamingRule } from "../../src/rules/rule-resource-naming";
 
 describe("End-to-End Linting", () => {
   const parser = new TerraformParser();
@@ -12,7 +12,7 @@ describe("End-to-End Linting", () => {
     const contexts = await parser.parseDirectory(fixtureDir);
 
     const engine = new RulesEngine();
-    engine.registerRule(new NamingConventionRule());
+    engine.registerRule(new ResourceNamingRule());
 
     const executionContext: ExecutionContext = { isPrivateRepo: false };
     const allViolations = contexts.flatMap((ctx) => engine.executeRules(ctx, executionContext));
@@ -26,7 +26,7 @@ describe("End-to-End Linting", () => {
     const contexts = await parser.parseDirectory(fixtureDir);
 
     const engine = new RulesEngine();
-    engine.registerRule(new NamingConventionRule());
+    engine.registerRule(new ResourceNamingRule());
 
     const executionContext: ExecutionContext = { isPrivateRepo: false };
     const allViolations = contexts.flatMap((ctx) => engine.executeRules(ctx, executionContext));

@@ -1,8 +1,8 @@
-import { NamingConventionRule } from "../../src/rules/rule-resource-naming";
+import { ResourceNamingRule } from "../../src/rules/rule-resource-naming";
 import { TerraformFileContext } from "../../src/core/types";
 
-describe("NamingConventionRule", () => {
-  const rule = new NamingConventionRule();
+describe("ResourceNamingRule", () => {
+  const rule = new ResourceNamingRule();
 
   test("detects invalid naming patterns", () => {
     const context: TerraformFileContext = {

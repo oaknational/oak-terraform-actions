@@ -19,7 +19,7 @@ describe("RuleLoader", () => {
     const config = {
       rules: [
         {
-          ruleType: "naming-convention",
+          ruleType: "helper-always-passes",
           enabled: true,
         },
       ],
@@ -29,7 +29,7 @@ describe("RuleLoader", () => {
     const loader = new RuleLoader();
     const rules = await loader.loadRulesFromFile(configPath);
     expect(rules).toHaveLength(1);
-    expect(rules[0].id).toBe("oak-naming-001");
+    expect(rules[0].id).toBe("oak-helper-pass-001");
   });
 
   test("skips disabled rules", async () => {
@@ -37,7 +37,7 @@ describe("RuleLoader", () => {
     const config = {
       rules: [
         {
-          ruleType: "naming-convention",
+          ruleType: "helper-always-passes",
           enabled: false,
         },
       ],
@@ -84,10 +84,10 @@ describe("RuleLoader", () => {
     const config = {
       rules: [
         {
-          ruleType: "naming-convention",
+          ruleType: "helper-always-passes",
           enabled: true,
           params: {
-            pattern: "^[a-z_]+$",
+            customParam: "custom-value",
           },
         },
       ],
@@ -98,6 +98,6 @@ describe("RuleLoader", () => {
     const rules = await loader.loadRulesFromFile(configPath);
     expect(rules).toHaveLength(1);
     expect(rules[0].params).toBeDefined();
-    expect((rules[0].params as Record<string, unknown>).pattern).toBe("^[a-z_]+$");
+    expect((rules[0].params as Record<string, unknown>).customParam).toBe("custom-value");
   });
 });

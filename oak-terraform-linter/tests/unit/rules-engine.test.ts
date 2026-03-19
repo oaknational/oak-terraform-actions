@@ -1,6 +1,10 @@
 import { RulesEngine } from "../../src/rules/engine";
 import { TerraformFileContext } from "../../src/core/types";
-import { HelperPassingRule, HelperFailingRule, HelperErrorRule } from "../../src/rules/rule-helpers";
+import {
+  HelperPassingRule,
+  HelperFailingRule,
+  HelperErrorRule,
+} from "../../src/rules/rule-helpers";
 
 describe("RulesEngine", () => {
   test("registers custom rule", () => {

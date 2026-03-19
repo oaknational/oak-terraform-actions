@@ -1,8 +1,12 @@
 import * as fs from "fs";
 import { Rule, RuleConfig } from "../core/types";
 import { NamingConventionRule } from "./rule-naming-example";
+import { HelperPassingRule, HelperFailingRule, HelperErrorRule } from "./rule-helpers";
 
 const AVAILABLE_RULES: Record<string, new () => Rule> = {
+  "helper-always-passes": HelperPassingRule,
+  "helper-always-fails": HelperFailingRule,
+  "helper-always-errors": HelperErrorRule,
   "naming-convention": NamingConventionRule,
 };
 

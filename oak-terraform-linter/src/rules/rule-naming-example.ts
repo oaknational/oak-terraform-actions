@@ -39,10 +39,10 @@ export class NamingConventionRule implements Rule {
             ruleId: this.id,
             ruleName: this.name,
             severity: this.severity,
+            filePath: context.filePath,
             message: isSnakeCase
               ? `Resource name '${resourceName}' does not match naming convention 'snake_case'.`
               : `Resource name '${resourceName}' does not match naming convention '${pattern}'.`,
-            filePath: context.filePath,
             suggestion: isSnakeCase
               ? `Rename to match pattern: ${resourceName.toLowerCase().replace(/[^a-z0-9_]/g, "_")}`
               : "",

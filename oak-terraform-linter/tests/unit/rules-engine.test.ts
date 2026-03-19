@@ -1,36 +1,18 @@
 import { RulesEngine } from "../../src/rules/engine";
-import { Rule, TerraformFileContext, LintViolation } from "../../src/core/types";
-
-class TestRule implements Rule {
-  id = "test-001";
-  name = "Test Rule";
-  description = "A test rule";
-  severity = "error" as const;
-
-  validate(): LintViolation[] {
-    return [
-      {
-        ruleId: this.id,
-        ruleName: this.name,
-        severity: this.severity,
-        message: "Test violation",
-        filePath: "test.tf",
-      },
-    ];
-  }
-}
+import { TerraformFileContext } from "../../src/core/types";
+import { HelperPassingRule, HelperFailingRule, HelperErrorRule } from "../../src/rules/rule-helpers";
 
 describe("RulesEngine", () => {
   test("registers custom rule", () => {
     const engine = new RulesEngine();
-    const rule = new TestRule();
+    const rule = new HelperPassingRule();
     engine.registerRule(rule);
     expect(engine.getRules()).toHaveLength(1);
   });
 
   test("executes rules against context", () => {
     const engine = new RulesEngine();
-    engine.registerRule(new TestRule());
+    engine.registerRule(new HelperFailingRule());
 
     const context: TerraformFileContext = {
       hcl: {},
@@ -63,21 +45,7 @@ describe("RulesEngine", () => {
 
   test("throws errors during rule execution", () => {
     const engine = new RulesEngine();
-
-    // Create a rule that throws an error
-    class FailingRule implements Rule {
-      id = "failing-rule";
-      name = "Failing Rule";
-      description = "A rule that fails";
-      severity = "error" as const;
-      params: Record<string, unknown> = {};
-
-      validate(): LintViolation[] {
-        throw new Error("Rule validation failed");
-      }
-    }
-
-    engine.registerRule(new FailingRule());
+    engine.registerRule(new HelperErrorRule());
 
     const context: TerraformFileContext = {
       hcl: {},
@@ -87,6 +55,6 @@ describe("RulesEngine", () => {
 
     expect(() => {
       engine.executeRules(context, {});
-    }).toThrow("Rule validation failed");
+    }).toThrow("This rule always errors (for development purposes only)");
   });
 });

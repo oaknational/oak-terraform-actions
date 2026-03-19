@@ -12,8 +12,8 @@ export interface LintViolation {
   ruleId: string;
   ruleName: string;
   severity: "error" | "warning" | "info";
-  message: string;
   filePath: string;
+  message: string;
   suggestion?: string;
 }
 

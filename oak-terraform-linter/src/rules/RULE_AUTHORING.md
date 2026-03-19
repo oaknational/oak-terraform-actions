@@ -52,7 +52,7 @@ export class MyCustomRule implements Rule {
     // to generate violations.
 
     // Check parser.ts for an example of the structure of the parsed HCL JSON so you know how to manipulate it.
-    // You can also use 'npm run parse' to output parsed HCL JSON of any terraform file. 
+    // You can also use 'npm run parse' to output parsed HCL JSON of any terraform file.
     // See src/commands/parse/README.md for details.
 
     return violations;

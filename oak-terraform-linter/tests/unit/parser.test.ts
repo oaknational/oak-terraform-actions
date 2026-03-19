@@ -28,6 +28,18 @@ describe("TerraformParser", () => {
     `;
     const context = await parser.parseContent(content, "test.tf");
     expect(context.hcl).toBeDefined();
+
+    const hcl = context.hcl as Record<string, unknown>;
+    expect(hcl.variable).toBeDefined();
+
+    const variables = hcl.variable as Record<string, unknown>;
+    expect(variables.environment).toBeDefined();
+
+    const environment = (variables.environment as unknown[])[0] as Record<string, unknown>;
+    expect(environment.type).toBe("${string}");
+    expect(environment.default).toBe("dev");
+    expect(environment.description).toBe("Environment name");
+
     expect(context.filePath).toBe("test.tf");
   });
 
@@ -58,6 +70,24 @@ describe("TerraformParser", () => {
       expect(contexts.length).toBe(2);
       expect(contexts.map((c) => path.basename(c.filePath))).toContain("root.tf");
       expect(contexts.map((c) => path.basename(c.filePath))).toContain("nested.tf");
+
+      // Verify HCL output for each parsed file
+      contexts.forEach((context) => {
+        expect(context.hcl).toBeDefined();
+        expect(context.fileContent).toBeDefined();
+
+        const hcl = context.hcl as Record<string, unknown>;
+        expect(hcl.resource).toBeDefined();
+
+        const resources = hcl.resource as Record<string, unknown>;
+        expect(resources.aws_vpc).toBeDefined();
+
+        const vpcResources = resources.aws_vpc as Record<string, unknown>;
+        expect(vpcResources.main).toBeDefined();
+
+        const mainVpc = (vpcResources.main as unknown[])[0] as Record<string, unknown>;
+        expect(mainVpc.cidr_block).toBe("10.0.0.0/16");
+      });
     });
 
     test("throws descriptive error when any file fails to parse", async () => {
@@ -102,6 +132,20 @@ describe("TerraformParser", () => {
       contexts.forEach((context) => {
         expect(context.hcl).toBeDefined();
         expect(context.filePath.endsWith(".tf")).toBe(true);
+        expect(context.fileContent).toBe(tfContent);
+
+        // Validate the complete HCL structure
+        const hcl = context.hcl as Record<string, unknown>;
+        expect(hcl.resource).toBeDefined();
+
+        const resources = hcl.resource as Record<string, unknown>;
+        expect(resources.aws_vpc).toBeDefined();
+
+        const vpcResources = resources.aws_vpc as Record<string, unknown>;
+        expect(vpcResources.main).toBeDefined();
+
+        const mainVpc = (vpcResources.main as unknown[])[0] as Record<string, unknown>;
+        expect(mainVpc.cidr_block).toBe("10.0.0.0/16");
       });
     });
   });

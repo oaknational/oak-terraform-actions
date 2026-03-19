@@ -2,15 +2,17 @@ import * as fs from "fs";
 import { Rule, RuleConfig } from "../core/types";
 import { ResourceNamingRule } from "./rule-resource-naming";
 import { HelperPassingRule, HelperFailingRule, HelperErrorRule } from "./rule-helpers";
+import { VariableFileRule } from "./rule-variable-file";
 
 const AVAILABLE_RULES: Record<string, new () => Rule> = {
   "helper-always-passes": HelperPassingRule,
   "helper-always-fails": HelperFailingRule,
   "helper-always-errors": HelperErrorRule,
   "resource-naming": ResourceNamingRule,
+  "variable-file": VariableFileRule,
 };
 
-const DEFAULT_RULES: RuleConfig[] = [{ ruleType: "resource-naming" }];
+const DEFAULT_RULES: RuleConfig[] = [{ ruleType: "variable-file" }];
 
 export class RuleLoader {
   async loadRulesFromFile(filePath: string): Promise<Rule[]> {

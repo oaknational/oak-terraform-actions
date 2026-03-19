@@ -1,6 +1,6 @@
 import * as fs from "fs";
 import { Rule, RuleConfig } from "../core/types";
-import { NamingConventionRule as ResourceNamingRule } from "./rule-resource-naming";
+import { ResourceNamingRule } from "./rule-resource-naming";
 import { HelperPassingRule, HelperFailingRule, HelperErrorRule } from "./rule-helpers";
 
 const AVAILABLE_RULES: Record<string, new () => Rule> = {

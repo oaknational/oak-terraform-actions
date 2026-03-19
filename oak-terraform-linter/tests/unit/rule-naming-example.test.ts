@@ -9,9 +9,11 @@ describe("NamingConventionRule", () => {
       hcl: {
         resource: {
           aws_s3_bucket: {
-            InvalidName: {
-              bucket: "my-bucket",
-            },
+            InvalidName: [
+              {
+                bucket: "my-bucket",
+              },
+            ],
           },
         },
       },
@@ -29,9 +31,11 @@ describe("NamingConventionRule", () => {
       hcl: {
         resource: {
           aws_s3_bucket: {
-            valid_name: {
-              bucket: "my-bucket",
-            },
+            valid_name: [
+              {
+                bucket: "my-bucket",
+              },
+            ],
           },
         },
       },
@@ -59,9 +63,11 @@ describe("NamingConventionRule", () => {
       hcl: {
         resource: {
           aws_s3_bucket: {
-            "Invalid-Name": {
-              bucket: "my-bucket",
-            },
+            "Invalid-Name": [
+              {
+                bucket: "my-bucket",
+              },
+            ],
           },
         },
       },

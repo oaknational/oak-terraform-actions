@@ -2,7 +2,10 @@ import { LintViolation } from "../core/types";
 import chalk from "chalk";
 
 export class HumanReporter {
-  report(violations: LintViolation[], _options: { strict: boolean; fileCount: number }): void {
+  report(
+    violations: LintViolation[],
+    _options: { strict: boolean; fileCount: number },
+  ): void {
     if (violations.length === 0) {
       console.log(chalk.green("✓ No violations found!"));
       return;
@@ -17,7 +20,9 @@ export class HumanReporter {
         const icon = this.getIcon(violation.severity);
         const colorFn = this.getColorFn(violation.severity);
 
-        console.log(`  ${icon}  ${colorFn(violation.message)} (${violation.ruleId})`);
+        console.log(
+          `  ${icon}  ${colorFn(violation.message)} (${violation.ruleId})`,
+        );
 
         if (violation.suggestion) {
           console.log(chalk.gray(`     💡 ${violation.suggestion}`));
@@ -31,12 +36,14 @@ export class HumanReporter {
 
     console.log(
       `Found ${chalk.red(`${errors} error`)}${errors !== 1 ? "s" : ""}, ${chalk.yellow(
-        `${warnings} warning`
-      )}${warnings !== 1 ? "s" : ""}`
+        `${warnings} warning`,
+      )}${warnings !== 1 ? "s" : ""}`,
     );
   }
 
-  private groupByFile(violations: LintViolation[]): Record<string, LintViolation[]> {
+  private groupByFile(
+    violations: LintViolation[],
+  ): Record<string, LintViolation[]> {
     const result: Record<string, LintViolation[]> = {};
     for (const violation of violations) {
       const file = violation.filePath;

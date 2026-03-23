@@ -1,7 +1,7 @@
 import { parse } from "@cdktf/hcl2json";
 import * as fs from "fs";
 import * as path from "path";
-import { TerraformFileContext } from "./types";
+import { TerraformFileContext, ParseOptions } from "./types";
 
 export class TerraformParser {
   async parseFile(filePath: string): Promise<TerraformFileContext> {
@@ -48,8 +48,12 @@ export class TerraformParser {
     }
   }
 
-  async parseDirectory(dirPath: string): Promise<TerraformFileContext[]> {
-    const files = this.findTerraformFiles(dirPath);
+  async parseDirectory(
+    dirPath: string,
+    options?: ParseOptions
+  ): Promise<TerraformFileContext[]> {
+    const parseOptions: ParseOptions = options || { recursive: true };
+    const files = this.findTerraformFiles(dirPath, parseOptions);
     const concurrencyLimit = 10;
     const contexts: TerraformFileContext[] = [];
 
@@ -62,14 +66,27 @@ export class TerraformParser {
     return contexts;
   }
 
-  private findTerraformFiles(dirPath: string): string[] {
+  private findTerraformFiles(dirPath: string, options: ParseOptions): string[] {
     const files: string[] = [];
     const entries = fs.readdirSync(dirPath, { withFileTypes: true });
 
     for (const entry of entries) {
       const fullPath = path.join(dirPath, entry.name);
       if (entry.isDirectory()) {
-        files.push(...this.findTerraformFiles(fullPath));
+        // Skip node_modules
+        if (entry.name === "node_modules") {
+          continue;
+        }
+
+        // Skip dot-directories (e.g. '.terraform')
+        if (entry.name.startsWith(".")) {
+          continue;
+        }
+
+        // Only recurse if recursive mode is enabled
+        if (options.recursive) {
+          files.push(...this.findTerraformFiles(fullPath, options));
+        }
       } else if (entry.name.endsWith(".tf")) {
         files.push(fullPath);
       }

@@ -138,7 +138,7 @@ describe("VariableFileRule", () => {
       expect(violations[0].filePath).toBe("main.tf");
     });
 
-    test("includes all variable names in violation message", () => {
+    test("creates separate violation for each variable", () => {
       const context: TerraformFileContext = {
         hcl: {
           variable: {
@@ -152,10 +152,10 @@ describe("VariableFileRule", () => {
       };
 
       const violations = rule.validate(context, {});
-      expect(violations).toHaveLength(1);
+      expect(violations).toHaveLength(3);
       expect(violations[0].message).toContain("app_name");
-      expect(violations[0].message).toContain("api_port");
-      expect(violations[0].message).toContain("debug_mode");
+      expect(violations[1].message).toContain("api_port");
+      expect(violations[2].message).toContain("debug_mode");
     });
 
     test("violation includes complete required fields", () => {
@@ -178,7 +178,8 @@ describe("VariableFileRule", () => {
       expect(violation.severity).toBe("error");
       expect(violation.filePath).toBe("terraform.tf");
       expect(violation.message).toMatch(/variables\.tf/);
-      expect(violation.suggestion).toBe("Move variable definitions to variables.tf");
+      expect(violation.message).toContain("'test_var'");
+      expect(violation.suggestion).toBe("Move 'test_var' definition to variables.tf");
     });
 
     test("detects variables in custom-named files", () => {
@@ -229,6 +230,7 @@ describe("VariableFileRule", () => {
 
       const invalidViolations = rule.validate(invalidContext, {});
       expect(invalidViolations).toHaveLength(1);
+      expect(invalidViolations[0].message).toContain("'vpc_cidr'");
     });
 
     test("respects case sensitivity for filename", () => {
@@ -253,6 +255,7 @@ describe("VariableFileRule", () => {
         const violations = rule.validate(context, {});
         if (shouldViolate) {
           expect(violations).toHaveLength(1);
+          expect(violations[0].message).toContain("'test_var'");
         } else {
           expect(violations).toHaveLength(0);
         }
@@ -279,7 +282,7 @@ describe("VariableFileRule", () => {
       });
     });
 
-    test("handles multiple variables with comma separation in message", () => {
+    test("returns one violation per variable", () => {
       const context: TerraformFileContext = {
         hcl: {
           variable: {
@@ -294,8 +297,11 @@ describe("VariableFileRule", () => {
       };
 
       const violations = rule.validate(context, {});
-      expect(violations).toHaveLength(1);
-      expect(violations[0].message).toContain(", ");
+      expect(violations).toHaveLength(4);
+      violations.forEach((violation, index) => {
+        expect(violation.message).toContain(`'var_${String.fromCharCode(97 + index)}'`);
+        expect(violation.suggestion).toContain(`'var_${String.fromCharCode(97 + index)}'`);
+      });
     });
   });
 

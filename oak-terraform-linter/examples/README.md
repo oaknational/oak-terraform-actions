@@ -2,12 +2,12 @@
 
 1. Review example configuration:
    ```bash
-   cat examples/custom-rules/custom-naming-rules.json
+   cat examples/configs/example-config.json
    ```
 
 2. Run linter against terraform samples:
    ```bash
-   npm run linter -- --path ./examples/terraform-samples --rules ./examples/custom-rules/custom-naming-rules.json
+   npm run linter -- --path ./examples/terraform-samples --rules ./examples/configs/example-config.json
    ```
 
 3. See the violations reported with suggestions.

@@ -12,11 +12,6 @@ resource "aws_subnet" "public" {
   availability_zone = "us-east-1a"
 }
 
-variable "environment_name" {
-  type = string
-  default = "prod"
-}
-
 output "vpc_id" {
   value = aws_vpc.main.id
   description = "ID of the VPC"

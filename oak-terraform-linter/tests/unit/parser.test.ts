@@ -148,5 +148,147 @@ describe("TerraformParser", () => {
         expect(mainVpc.cidr_block).toBe("10.0.0.0/16");
       });
     });
+
+    test("respects recursive false option", async () => {
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "parser-test-no-recursive-"));
+      const modulesDir = path.join(tempDir, "modules");
+      fs.mkdirSync(modulesDir);
+
+      const tfContent = `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`;
+      fs.writeFileSync(path.join(tempDir, "root.tf"), tfContent);
+      fs.writeFileSync(path.join(modulesDir, "main.tf"), tfContent);
+
+      const contexts = await parser.parseDirectory(tempDir, { recursive: false });
+
+      // Cleanup
+      fs.rmSync(tempDir, { recursive: true });
+
+      expect(contexts).toHaveLength(1);
+      expect(contexts[0].filePath).toContain("root.tf");
+      expect(contexts[0].filePath).not.toContain("modules");
+    });
+
+    test("skips node_modules directory", async () => {
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "parser-test-node-modules-"));
+      const nodeModulesDir = path.join(tempDir, "node_modules", "package");
+      fs.mkdirSync(nodeModulesDir, { recursive: true });
+
+      const tfContent = `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`;
+      fs.writeFileSync(path.join(tempDir, "main.tf"), tfContent);
+      fs.writeFileSync(path.join(nodeModulesDir, "index.tf"), tfContent);
+
+      const contexts = await parser.parseDirectory(tempDir);
+
+      // Cleanup
+      fs.rmSync(tempDir, { recursive: true });
+
+      expect(contexts).toHaveLength(1);
+      expect(contexts[0].filePath).toContain("main.tf");
+      expect(contexts[0].filePath).not.toContain("node_modules");
+    });
+
+    test("skips dot-directories", async () => {
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "parser-test-dot-dirs-"));
+      const gitDir = path.join(tempDir, ".git");
+      const terraformDir = path.join(tempDir, ".terraform");
+      const normalDir = path.join(tempDir, "terraform");
+
+      fs.mkdirSync(gitDir);
+      fs.mkdirSync(terraformDir);
+      fs.mkdirSync(normalDir);
+
+      const tfContent = `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`;
+      fs.writeFileSync(path.join(tempDir, "main.tf"), tfContent);
+      fs.writeFileSync(path.join(gitDir, "config.tf"), tfContent);
+      fs.writeFileSync(path.join(terraformDir, "state.tf"), tfContent);
+      fs.writeFileSync(path.join(normalDir, "vpc.tf"), tfContent);
+
+      const contexts = await parser.parseDirectory(tempDir);
+
+      // Cleanup
+      fs.rmSync(tempDir, { recursive: true });
+
+      expect(contexts).toHaveLength(2); // main.tf + vpc.tf
+      expect(contexts.every((c) => !c.filePath.includes(".git"))).toBe(true);
+      expect(contexts.every((c) => !c.filePath.includes(".terraform"))).toBe(true);
+      expect(contexts.some((c) => c.filePath.includes("terraform/vpc.tf"))).toBe(true);
+    });
+
+    test("combines recursive=false and directory filtering", async () => {
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "parser-test-combined-"));
+      const nodeModulesDir = path.join(tempDir, "node_modules");
+      const terraformDir = path.join(tempDir, ".terraform");
+
+      fs.mkdirSync(nodeModulesDir);
+      fs.mkdirSync(terraformDir);
+
+      const tfContent = `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`;
+      fs.writeFileSync(path.join(tempDir, "main.tf"), tfContent);
+      fs.writeFileSync(path.join(nodeModulesDir, "main.tf"), tfContent);
+      fs.writeFileSync(path.join(terraformDir, "state.tf"), tfContent);
+
+      const contexts = await parser.parseDirectory(tempDir, { recursive: false });
+
+      // Cleanup
+      fs.rmSync(tempDir, { recursive: true });
+
+      expect(contexts).toHaveLength(1);
+      expect(contexts[0].filePath).toContain("main.tf");
+      expect(contexts[0].filePath).not.toContain("node_modules");
+      expect(contexts[0].filePath).not.toContain(".terraform");
+    });
+
+    test("deeply nested structure with recursive=true", async () => {
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "parser-test-deep-"));
+      const vpcDir = path.join(tempDir, "modules", "vpc");
+      const vpcTfDir = path.join(vpcDir, ".terraform");
+      const computeDir = path.join(tempDir, "modules", "compute");
+      const computeNmDir = path.join(computeDir, "node_modules");
+      const gitDir = path.join(tempDir, ".git");
+
+      // Create all directories
+      fs.mkdirSync(vpcDir, { recursive: true });
+      fs.mkdirSync(vpcTfDir);
+      fs.mkdirSync(computeNmDir, { recursive: true });
+      fs.mkdirSync(gitDir);
+
+      const tfContent = `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`;
+
+      // Create files
+      fs.writeFileSync(path.join(tempDir, "main.tf"), tfContent);
+      fs.writeFileSync(path.join(vpcDir, "main.tf"), tfContent);
+      fs.writeFileSync(path.join(vpcTfDir, "state.tf"), tfContent);
+      fs.writeFileSync(path.join(computeDir, "main.tf"), tfContent);
+      fs.writeFileSync(path.join(computeNmDir, "package.tf"), tfContent);
+      fs.writeFileSync(path.join(gitDir, "config.tf"), tfContent);
+
+      const contexts = await parser.parseDirectory(tempDir);
+
+      // Cleanup
+      fs.rmSync(tempDir, { recursive: true });
+
+      expect(contexts).toHaveLength(3); // root main.tf + vpc main.tf + compute main.tf
+      expect(contexts.every((c) => !c.filePath.includes(".git"))).toBe(true);
+      expect(contexts.every((c) => !c.filePath.includes("node_modules"))).toBe(true);
+      expect(contexts.every((c) => !c.filePath.includes(".terraform"))).toBe(true);
+    });
+
+    test("defaults to recursive=true when options omitted", async () => {
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "parser-test-defaults-"));
+      const nestedDir = path.join(tempDir, "nested");
+      fs.mkdirSync(nestedDir);
+
+      const tfContent = `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`;
+      fs.writeFileSync(path.join(tempDir, "root.tf"), tfContent);
+      fs.writeFileSync(path.join(nestedDir, "nested.tf"), tfContent);
+
+      // Call without options parameter
+      const contexts = await parser.parseDirectory(tempDir);
+
+      // Cleanup
+      fs.rmSync(tempDir, { recursive: true });
+
+      expect(contexts).toHaveLength(2); // Should find both (recursive by default)
+    });
   });
 });

@@ -21,16 +21,16 @@ export class VariableFileRule implements Rule {
 
     const variables = context.hcl.variable;
     if (variables && Object.keys(variables).length > 0) {
-      const variableNames = Object.keys(variables).join(", ");
-
-      violations.push({
-        ruleId: this.id,
-        ruleName: this.name,
-        severity: this.severity,
-        message: `All variable definitions should be in variables.tf. Found variables: ${variableNames}`,
-        filePath: context.filePath,
-        suggestion: "Move variable definitions to variables.tf",
-      });
+      for (const variableName of Object.keys(variables)) {
+        violations.push({
+          ruleId: this.id,
+          ruleName: this.name,
+          severity: this.severity,
+          filePath: context.filePath,
+          message: `All variable definitions should be in variables.tf. Found variable: '${variableName}'.`,
+          suggestion: `Move '${variableName}' definition to variables.tf`,
+        });
+      }
     }
 
     return violations;

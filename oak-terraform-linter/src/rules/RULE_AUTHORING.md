@@ -16,7 +16,7 @@ interface Rule {
   validate(
     context: TerraformFileContext,
     executionContext: ExecutionContext,
-    params?: Record<string, unknown>
+    params?: Record<string, unknown>,
   ): LintViolation[];
 }
 ```
@@ -28,7 +28,12 @@ interface Rule {
 The Rule Engine will loop through all `.tf` files found in the linter's target path and call your rule's `validate` function on each one.
 
 ```typescript
-import { Rule, TerraformFileContext, ExecutionContext, LintViolation } from "../core/types";
+import {
+  Rule,
+  TerraformFileContext,
+  ExecutionContext,
+  LintViolation,
+} from "../core/types";
 
 export class MyCustomRule implements Rule {
   id = "custom-my-rule-001";
@@ -40,7 +45,7 @@ export class MyCustomRule implements Rule {
   validate(
     context: TerraformFileContext,
     executionContext: ExecutionContext,
-    params?: Record<string, unknown>
+    params?: Record<string, unknown>,
   ): LintViolation[] {
     const violations: LintViolation[] = [];
 

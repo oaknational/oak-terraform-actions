@@ -1,7 +1,11 @@
 import * as fs from "fs";
 import { Rule, RuleConfig } from "../core/types";
 import { ResourceNamingRule } from "./rule-resource-naming";
-import { HelperPassingRule, HelperFailingRule, HelperErrorRule } from "./rule-helpers";
+import {
+  HelperPassingRule,
+  HelperFailingRule,
+  HelperErrorRule,
+} from "./rule-helpers";
 
 const AVAILABLE_RULES: Record<string, new () => Rule> = {
   "helper-always-passes": HelperPassingRule,
@@ -41,8 +45,8 @@ export class RuleLoader {
         if (!ruleClass) {
           throw new Error(
             `Rule type '${config.ruleType}' not found. Available types: ${Object.keys(
-              AVAILABLE_RULES
-            ).join(", ")}`
+              AVAILABLE_RULES,
+            ).join(", ")}`,
           );
         }
 
@@ -55,7 +59,9 @@ export class RuleLoader {
         rules.push(rule);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        throw new Error(`Failed to instantiate rule '${config.ruleType}': ${message}`);
+        throw new Error(
+          `Failed to instantiate rule '${config.ruleType}': ${message}`,
+        );
       }
     }
 

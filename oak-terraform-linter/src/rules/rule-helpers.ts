@@ -1,9 +1,4 @@
-import {
-  Rule,
-  TerraformFileContext,
-  ExecutionContext,
-  LintViolation,
-} from "../core/types";
+import { Rule, TerraformFileContext, ExecutionContext, LintViolation } from "../core/types";
 
 export class HelperPassingRule implements Rule {
   id = "oak-helper-pass-001";
@@ -15,7 +10,7 @@ export class HelperPassingRule implements Rule {
   validate(
     _context: TerraformFileContext,
     _executionContext: ExecutionContext,
-    _params?: Record<string, unknown>,
+    _params?: Record<string, unknown>
   ): LintViolation[] {
     return [];
   }
@@ -31,7 +26,7 @@ export class HelperFailingRule implements Rule {
   validate(
     _context: TerraformFileContext,
     _executionContext: ExecutionContext,
-    _params?: Record<string, unknown>,
+    _params?: Record<string, unknown>
   ): LintViolation[] {
     return [
       {
@@ -56,7 +51,7 @@ export class HelperErrorRule implements Rule {
   validate(
     _context: TerraformFileContext,
     _executionContext: ExecutionContext,
-    _params?: Record<string, unknown>,
+    _params?: Record<string, unknown>
   ): LintViolation[] {
     throw new Error("This rule always errors (for development purposes only)");
   }

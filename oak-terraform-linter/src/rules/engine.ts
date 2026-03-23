@@ -1,9 +1,4 @@
-import {
-  TerraformFileContext,
-  ExecutionContext,
-  LintViolation,
-  Rule,
-} from "../core/types";
+import { TerraformFileContext, ExecutionContext, LintViolation, Rule } from "../core/types";
 import { RuleLoader } from "./loader";
 
 export class RulesEngine {
@@ -22,18 +17,11 @@ export class RulesEngine {
     this.rules = this.loader.loadDefaultRules();
   }
 
-  executeRules(
-    context: TerraformFileContext,
-    executionContext: ExecutionContext,
-  ): LintViolation[] {
+  executeRules(context: TerraformFileContext, executionContext: ExecutionContext): LintViolation[] {
     const violations: LintViolation[] = [];
 
     for (const rule of this.rules) {
-      const ruleViolations = rule.validate(
-        context,
-        executionContext,
-        rule.params,
-      );
+      const ruleViolations = rule.validate(context, executionContext, rule.params);
       violations.push(...ruleViolations);
     }
 

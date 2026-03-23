@@ -46,9 +46,7 @@ export async function runCLI(argv: string[]): Promise<number> {
       isPrivateRepo: args["private-repo"] as boolean,
     };
 
-    const allViolations = contexts.flatMap((ctx) =>
-      engine.executeRules(ctx, executionContext),
-    );
+    const allViolations = contexts.flatMap((ctx) => engine.executeRules(ctx, executionContext));
 
     const reporter = new HumanReporter();
     reporter.report(allViolations, {

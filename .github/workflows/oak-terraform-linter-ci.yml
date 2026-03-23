@@ -7,7 +7,6 @@ on:
       - "oak-terraform-linter/**"
       - ".github/workflows/oak-terraform-linter-ci.yml"
   pull_request:
-    branches: [main]
     paths:
       - "oak-terraform-linter/**"
       - ".github/workflows/oak-terraform-linter-ci.yml"

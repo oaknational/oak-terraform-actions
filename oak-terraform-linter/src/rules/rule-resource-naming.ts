@@ -45,7 +45,7 @@ export class ResourceNamingRule implements Rule {
               : `Resource name '${resourceName}' does not match naming convention '${pattern}'.`,
             suggestion: isSnakeCase
               ? `Rename to match pattern: ${resourceName.toLowerCase().replace(/[^a-z0-9_]/g, "_")}`
-              : "",
+              : undefined,
           });
         }
       }

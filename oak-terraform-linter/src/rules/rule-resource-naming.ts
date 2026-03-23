@@ -1,9 +1,4 @@
-import {
-  Rule,
-  TerraformFileContext,
-  ExecutionContext,
-  LintViolation,
-} from "../core/types";
+import { Rule, TerraformFileContext, ExecutionContext, LintViolation } from "../core/types";
 
 export class ResourceNamingRule implements Rule {
   id = "oak-resource-naming-001";
@@ -15,15 +10,13 @@ export class ResourceNamingRule implements Rule {
   validate(
     context: TerraformFileContext,
     _executionContext: ExecutionContext,
-    params?: Record<string, unknown>,
+    params?: Record<string, unknown>
   ): LintViolation[] {
     const violations: LintViolation[] = [];
     const snakeCasePattern = /^[a-z0-9_]+$/;
     const patternParam = params?.pattern || snakeCasePattern;
     const pattern =
-      typeof patternParam === "string"
-        ? new RegExp(patternParam)
-        : (patternParam as RegExp);
+      typeof patternParam === "string" ? new RegExp(patternParam) : (patternParam as RegExp);
     const isSnakeCase = snakeCasePattern === pattern;
 
     const resources = context.hcl.resource;
@@ -36,14 +29,8 @@ export class ResourceNamingRule implements Rule {
         continue;
       }
 
-      for (const [resourceName, resourceConfig] of Object.entries(
-        resourceInstances,
-      )) {
-        if (
-          !resourceName ||
-          !resourceConfig ||
-          typeof resourceConfig !== "object"
-        ) {
+      for (const [resourceName, resourceConfig] of Object.entries(resourceInstances)) {
+        if (!resourceName || !resourceConfig || typeof resourceConfig !== "object") {
           continue;
         }
 

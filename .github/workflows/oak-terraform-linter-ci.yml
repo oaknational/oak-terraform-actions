@@ -1,0 +1,51 @@
+name: oak-terraform-linter CI
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "oak-terraform-linter/**"
+      - ".github/workflows/oak-terraform-linter-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "oak-terraform-linter/**"
+      - ".github/workflows/oak-terraform-linter-ci.yml"
+
+jobs:
+  linter-ci:
+    name: Lint, test, and build oak-terraform-linter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: "oak-terraform-linter/package-lock.json"
+
+      - name: Install dependencies
+        working-directory: ./oak-terraform-linter
+        run: npm ci
+
+      - name: Check code formatting
+        working-directory: ./oak-terraform-linter
+        run: npx prettier --check src tests
+
+      - name: Lint code
+        working-directory: ./oak-terraform-linter
+        run: npm run lint
+
+      - name: Run tests
+        working-directory: ./oak-terraform-linter
+        run: npm test -- --coverage
+
+      - name: Check TypeScript compilation
+        working-directory: ./oak-terraform-linter
+        run: npm run build
+        env:
+          NODE_ENV: production

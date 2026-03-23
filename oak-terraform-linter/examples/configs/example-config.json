@@ -1,7 +1,7 @@
 {
   "rules": [
     {
-      "ruleType": "naming-convention",
+      "ruleType": "resource-naming",
       "enabled": true
     }
   ]

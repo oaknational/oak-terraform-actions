@@ -98,8 +98,6 @@ describe("RuleLoader", () => {
     const rules = await loader.loadRulesFromFile(configPath);
     expect(rules).toHaveLength(1);
     expect(rules[0].params).toBeDefined();
-    expect((rules[0].params as Record<string, unknown>).customParam).toBe(
-      "custom-value",
-    );
+    expect((rules[0].params as Record<string, unknown>).customParam).toBe("custom-value");
   });
 });

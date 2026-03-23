@@ -43,6 +43,6 @@ export interface Rule {
   validate(
     context: TerraformFileContext,
     executionContext: ExecutionContext,
-    params?: Record<string, unknown>,
+    params?: Record<string, unknown>
   ): LintViolation[];
 }

@@ -34,7 +34,10 @@ export class TerraformParser {
    * }
    * ```
    */
-  async parseContent(content: string, filePath: string): Promise<TerraformFileContext> {
+  async parseContent(
+    content: string,
+    filePath: string,
+  ): Promise<TerraformFileContext> {
     try {
       const parsed = await parse(filePath, content);
       return {
@@ -55,7 +58,9 @@ export class TerraformParser {
 
     for (let i = 0; i < files.length; i += concurrencyLimit) {
       const batch = files.slice(i, i + concurrencyLimit);
-      const batchResults = await Promise.all(batch.map((file) => this.parseFile(file)));
+      const batchResults = await Promise.all(
+        batch.map((file) => this.parseFile(file)),
+      );
       contexts.push(...batchResults);
     }
 

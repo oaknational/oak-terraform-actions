@@ -28,12 +28,19 @@ export async function runCLI(argv: string[]): Promise<number> {
       default: false,
       description: "Flag indicating if the repository is private",
     })
+    .option("no-recursive", {
+      type: "boolean",
+      default: false,
+      description: "Disable recursive directory search (only search root directory)",
+    })
     .help()
     .parseAsync();
 
   try {
     const parser = new TerraformParser();
-    const contexts = await parser.parseDirectory(args.path as string);
+    const contexts = await parser.parseDirectory(args.path as string, {
+      recursive: !(args["no-recursive"] as boolean),
+    });
 
     const engine = new RulesEngine();
     if (args.rules) {

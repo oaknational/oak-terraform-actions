@@ -34,6 +34,10 @@ export interface ExecutionContext {
   isPrivateRepo?: boolean;
 }
 
+export interface ParseOptions {
+  recursive: boolean;
+}
+
 export interface Rule {
   id: string;
   name: string;

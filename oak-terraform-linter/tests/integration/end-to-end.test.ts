@@ -19,6 +19,16 @@ describe("End-to-End Linting", () => {
 
     expect(allViolations.length).toBeGreaterThan(0);
     expect(allViolations[0].ruleId).toBe("oak-resource-naming-001");
+
+    // check for non nested violation in the nested subdirectory
+    const nonNestedViolation = allViolations.find((v) => !v.filePath.includes("nested/"));
+    expect(nonNestedViolation).toBeDefined();
+    expect(nonNestedViolation?.ruleId).toBe("oak-resource-naming-001");
+
+    // check for violation in the nested subdirectory
+    const nestedViolation = allViolations.find((v) => v.filePath.includes("nested/"));
+    expect(nestedViolation).toBeDefined();
+    expect(nestedViolation?.ruleId).toBe("oak-resource-naming-001");
   });
 
   test("passes clean Terraform files", async () => {

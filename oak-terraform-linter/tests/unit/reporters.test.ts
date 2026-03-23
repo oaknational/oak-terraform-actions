@@ -15,9 +15,7 @@ describe("HumanReporter", () => {
 
   test("reports no violations message", () => {
     reporter.report([], { strict: false, fileCount: 1 });
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("No violations"),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("No violations"));
   });
 
   test("groups violations by file", () => {
@@ -39,12 +37,8 @@ describe("HumanReporter", () => {
     ];
 
     reporter.report(violations, { strict: false, fileCount: 2 });
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("file1.tf"),
-    );
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("file2.tf"),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("file1.tf"));
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("file2.tf"));
   });
 
   test("summarizes violations", () => {
@@ -67,9 +61,7 @@ describe("HumanReporter", () => {
 
     reporter.report(violations, { strict: false, fileCount: 1 });
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("1 error"));
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("1 warning"),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("1 warning"));
   });
 
   test("includes suggestions when available", () => {
@@ -85,9 +77,7 @@ describe("HumanReporter", () => {
     ];
 
     reporter.report(violations, { strict: false, fileCount: 1 });
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("Use this instead"),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Use this instead"));
   });
 
   test("handles info severity violations", () => {
@@ -103,9 +93,7 @@ describe("HumanReporter", () => {
 
     reporter.report(violations, { strict: false, fileCount: 1 });
     // Should print the info violation with ℹ icon
-    expect(consoleSpy).toHaveBeenCalledWith(
-      expect.stringContaining("Info message"),
-    );
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("Info message"));
     expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining("ℹ"));
   });
 

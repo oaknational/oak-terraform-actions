@@ -48,10 +48,7 @@ export class TerraformParser {
     }
   }
 
-  async parseDirectory(
-    dirPath: string,
-    options?: ParseOptions
-  ): Promise<TerraformFileContext[]> {
+  async parseDirectory(dirPath: string, options?: ParseOptions): Promise<TerraformFileContext[]> {
     const parseOptions: ParseOptions = options || { recursive: true };
     const files = this.findTerraformFiles(dirPath, parseOptions);
     const concurrencyLimit = 10;

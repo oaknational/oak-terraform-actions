@@ -3,6 +3,10 @@
     {
       "ruleType": "resource-naming",
       "enabled": true
+    },
+    {
+      "ruleType": "variable-file",
+      "enabled": true
     }
   ]
 }

@@ -35,7 +35,10 @@ describe("TerraformParser", () => {
     const variables = hcl.variable as Record<string, unknown>;
     expect(variables.environment).toBeDefined();
 
-    const environment = (variables.environment as unknown[])[0] as Record<string, unknown>;
+    const environment = (variables.environment as unknown[])[0] as Record<
+      string,
+      unknown
+    >;
     expect(environment.type).toBe("${string}");
     expect(environment.default).toBe("dev");
     expect(environment.description).toBe("Environment name");
@@ -68,8 +71,12 @@ describe("TerraformParser", () => {
       fs.rmSync(tempDir, { recursive: true });
 
       expect(contexts.length).toBe(2);
-      expect(contexts.map((c) => path.basename(c.filePath))).toContain("root.tf");
-      expect(contexts.map((c) => path.basename(c.filePath))).toContain("nested.tf");
+      expect(contexts.map((c) => path.basename(c.filePath))).toContain(
+        "root.tf",
+      );
+      expect(contexts.map((c) => path.basename(c.filePath))).toContain(
+        "nested.tf",
+      );
 
       // Verify HCL output for each parsed file
       contexts.forEach((context) => {
@@ -85,7 +92,10 @@ describe("TerraformParser", () => {
         const vpcResources = resources.aws_vpc as Record<string, unknown>;
         expect(vpcResources.main).toBeDefined();
 
-        const mainVpc = (vpcResources.main as unknown[])[0] as Record<string, unknown>;
+        const mainVpc = (vpcResources.main as unknown[])[0] as Record<
+          string,
+          unknown
+        >;
         expect(mainVpc.cidr_block).toBe("10.0.0.0/16");
       });
     });
@@ -95,17 +105,24 @@ describe("TerraformParser", () => {
       const validFile = path.join(tempDir, "valid.tf");
       const invalidFile = path.join(tempDir, "invalid.tf");
 
-      fs.writeFileSync(validFile, `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`);
+      fs.writeFileSync(
+        validFile,
+        `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`,
+      );
       fs.writeFileSync(invalidFile, "invalid hcl2 syntax {{{");
 
-      await expect(parser.parseDirectory(tempDir)).rejects.toThrow(/Failed to parse .*invalid\.tf/);
+      await expect(parser.parseDirectory(tempDir)).rejects.toThrow(
+        /Failed to parse .*invalid\.tf/,
+      );
 
       // Cleanup
       fs.rmSync(tempDir, { recursive: true });
     });
 
     test("handles empty directory", async () => {
-      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "parser-test-empty-"));
+      const tempDir = fs.mkdtempSync(
+        path.join(os.tmpdir(), "parser-test-empty-"),
+      );
       const contexts = await parser.parseDirectory(tempDir);
 
       // Cleanup
@@ -115,7 +132,9 @@ describe("TerraformParser", () => {
     });
 
     test("parses files concurrently in batches", async () => {
-      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "parser-test-concurrent-"));
+      const tempDir = fs.mkdtempSync(
+        path.join(os.tmpdir(), "parser-test-concurrent-"),
+      );
       const tfContent = `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`;
 
       // Create multiple files to test concurrent parsing
@@ -144,7 +163,10 @@ describe("TerraformParser", () => {
         const vpcResources = resources.aws_vpc as Record<string, unknown>;
         expect(vpcResources.main).toBeDefined();
 
-        const mainVpc = (vpcResources.main as unknown[])[0] as Record<string, unknown>;
+        const mainVpc = (vpcResources.main as unknown[])[0] as Record<
+          string,
+          unknown
+        >;
         expect(mainVpc.cidr_block).toBe("10.0.0.0/16");
       });
     });

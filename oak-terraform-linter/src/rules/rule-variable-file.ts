@@ -15,22 +15,31 @@ export class VariableFileRule implements Rule {
   ): LintViolation[] {
     const violations: LintViolation[] = [];
     const fileName = path.basename(context.filePath);
-    if (fileName === "variables.tf") {
-      return violations;
-    }
-
     const variables = context.hcl.variable;
-    if (variables && Object.keys(variables).length > 0) {
-      for (const variableName of Object.keys(variables)) {
+    if (fileName === "variables.tf") {
+      const blockTypes = Object.keys(context.hcl);
+      const nonVariableBlocks = blockTypes.filter((blockType) => blockType !== "variable");
+      if (nonVariableBlocks.length > 0) {
+        const nonVariableBlocksStr = nonVariableBlocks.join(", ");
         violations.push({
           ruleId: this.id,
           ruleName: this.name,
           severity: this.severity,
           filePath: context.filePath,
-          message: `All variable definitions should be in variables.tf. Found variable: '${variableName}'.`,
-          suggestion: `Move '${variableName}' definition to variables.tf`,
+          message: `variables.tf should only contain variable definitions. Found non-variable block type(s): ${nonVariableBlocksStr}`,
+          suggestion: `Move non-variable definition(s) out of variables.tf`,
         });
       }
+    } else if (variables && Object.keys(variables).length > 0) {
+      const variableNamesStr = Object.keys(variables).join(", ");
+      violations.push({
+        ruleId: this.id,
+        ruleName: this.name,
+        severity: this.severity,
+        filePath: context.filePath,
+        message: `All variable definitions should be in variables.tf. Found variable(s): ${variableNamesStr}`,
+        suggestion: `Move variable definition(s) to variables.tf`,
+      });
     }
 
     return violations;

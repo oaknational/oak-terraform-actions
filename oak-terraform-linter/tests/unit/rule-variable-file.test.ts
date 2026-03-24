@@ -129,6 +129,39 @@ describe("VariableFileRule", () => {
       expect(violations[0].filePath).toBe("variables.tf");
     });
 
+    test("detects multiple non-variable block types in variables.tf", () => {
+      const context: TerraformFileContext = {
+        hcl: {
+          variable: {
+            env: [{ type: "string" }],
+            another_var: [{ type: "string" }],
+          },
+          resource: {
+            aws_instance: {
+              app: [{ instance_type: "t2.micro" }],
+            },
+          },
+          output: {
+            instance_id: [{ value: "aws_instance.app.id" }],
+          },
+          locals: {
+            common_tags: [{ Environment: "dev" }],
+          },
+        },
+        filePath: "./infrastructure/project/variables.tf",
+        fileContent: "",
+      };
+
+      const violations = rule.validate(context, {});
+      expect(violations).toHaveLength(1);
+      expect(violations[0].ruleId).toBe("oak-variable-file-001");
+      expect(violations[0].severity).toBe("error");
+      expect(violations[0].message).toContain("resource");
+      expect(violations[0].message).toContain("output");
+      expect(violations[0].message).toContain("locals");
+      expect(violations[0].filePath).toBe("./infrastructure/project/variables.tf");
+    });
+
     test("detects single variable in main.tf", () => {
       const context: TerraformFileContext = {
         hcl: {

@@ -192,7 +192,9 @@ describe("VariableFileRule", () => {
       expect(violation.ruleName).toBe("Variable File Usage");
       expect(violation.severity).toBe("error");
       expect(violation.filePath).toBe("terraform.tf");
-      expect(violation.message).toContain("All variable definitions should be in variables.tf. Found variable(s): ");
+      expect(violation.message).toContain(
+        "All variable definitions should be in variables.tf. Found variable(s): "
+      );
       expect(violation.message).toContain("test_var");
       expect(violation.suggestion).toBe("Move variable definition(s) to variables.tf");
     });
@@ -234,6 +236,6 @@ describe("VariableFileRule", () => {
       expect(rule.severity).toBe("error");
       expect(rule.description).toBeDefined();
       expect(rule.description.length).toBeGreaterThan(0);
-    });  
+    });
   });
 });

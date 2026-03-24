@@ -282,11 +282,13 @@ describe("TerraformParser", () => {
       fs.writeFileSync(path.join(tempDir, "root.tf"), tfContent);
       fs.writeFileSync(path.join(nestedDir, "nested.tf"), tfContent);
 
+      // Call without options parameter
       const contexts = await parser.parseDirectory(tempDir);
 
       // Cleanup
       fs.rmSync(tempDir, { recursive: true });
 
+      // Should find both (recursive by default)
       expect(contexts).toHaveLength(2);
     });
 

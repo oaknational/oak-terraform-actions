@@ -282,13 +282,34 @@ describe("TerraformParser", () => {
       fs.writeFileSync(path.join(tempDir, "root.tf"), tfContent);
       fs.writeFileSync(path.join(nestedDir, "nested.tf"), tfContent);
 
-      // Call without options parameter
       const contexts = await parser.parseDirectory(tempDir);
 
       // Cleanup
       fs.rmSync(tempDir, { recursive: true });
 
-      expect(contexts).toHaveLength(2); // Should find both (recursive by default)
+      expect(contexts).toHaveLength(2);
+    });
+
+    test("ignores non-terraform files in directory", async () => {
+      const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "parser-test-non-tf-"));
+      const nestedDir = path.join(tempDir, "modules");
+      fs.mkdirSync(nestedDir);
+
+      const tfContent = `resource "aws_vpc" "main" { cidr_block = "10.0.0.0/16" }`;
+      fs.writeFileSync(path.join(tempDir, "main.tf"), tfContent);
+      fs.writeFileSync(path.join(tempDir, "README.md"), "# Documentation");
+      fs.writeFileSync(path.join(nestedDir, "vpc.tf"), tfContent);
+      fs.writeFileSync(path.join(nestedDir, "config.json"), "{}");
+
+      const contexts = await parser.parseDirectory(tempDir);
+
+      // Cleanup
+      fs.rmSync(tempDir, { recursive: true });
+
+      expect(contexts).toHaveLength(2);
+      expect(contexts.every((c) => c.filePath.endsWith(".tf"))).toBe(true);
+      expect(contexts.some((c) => c.filePath.endsWith("main.tf"))).toBe(true);
+      expect(contexts.some((c) => c.filePath.endsWith("vpc.tf"))).toBe(true);
     });
   });
 });

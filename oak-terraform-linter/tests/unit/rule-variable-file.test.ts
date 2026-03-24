@@ -4,8 +4,7 @@ import { TerraformFileContext } from "../../src/core/types";
 describe("VariableFileRule", () => {
   const rule = new VariableFileRule();
 
-  describe("Valid Cases", () => {
-    test("allows variables in variables.tf", () => {
+  test("allows variables in variables.tf", () => {
       const context: TerraformFileContext = {
         hcl: {
           variable: {
@@ -101,10 +100,8 @@ describe("VariableFileRule", () => {
       const violations = rule.validate(context, {});
       expect(violations).toHaveLength(0);
     });
-  });
 
-  describe("Invalid Cases", () => {
-    test("detects non-variable blocks in variables.tf", () => {
+  test("detects non-variable blocks in variables.tf", () => {
       const context: TerraformFileContext = {
         hcl: {
           resource: {
@@ -231,5 +228,4 @@ describe("VariableFileRule", () => {
       expect(violation.message).toContain("test_var");
       expect(violation.suggestion).toBe("Move variable definition(s) to variables.tf");
     });
-  });
 });

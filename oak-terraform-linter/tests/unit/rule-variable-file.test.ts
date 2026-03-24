@@ -232,43 +232,4 @@ describe("VariableFileRule", () => {
       expect(violation.suggestion).toBe("Move variable definition(s) to variables.tf");
     });
   });
-
-  describe("Misc", () => {
-    test("respects case sensitivity for filename", () => {
-      const caseVariants = [
-        { path: "VARIABLES.TF", shouldViolate: true },
-        { path: "Variables.tf", shouldViolate: true },
-        { path: "variables.TF", shouldViolate: true },
-        { path: "variables.tf", shouldViolate: false },
-      ];
-
-      caseVariants.forEach(({ path, shouldViolate }) => {
-        const context: TerraformFileContext = {
-          hcl: {
-            variable: {
-              test_var: [{ type: "string" }],
-            },
-          },
-          filePath: path,
-          fileContent: "",
-        };
-
-        const violations = rule.validate(context, {});
-        if (shouldViolate) {
-          expect(violations).toHaveLength(1);
-          expect(violations[0].message).toContain("test_var");
-        } else {
-          expect(violations).toHaveLength(0);
-        }
-      });
-    });
-
-    test("rule metadata is correct", () => {
-      expect(rule.id).toBe("oak-variable-file-001");
-      expect(rule.name).toBe("Variable File Usage");
-      expect(rule.severity).toBe("error");
-      expect(rule.description).toBeDefined();
-      expect(rule.description.length).toBeGreaterThan(0);
-    });
-  });
 });

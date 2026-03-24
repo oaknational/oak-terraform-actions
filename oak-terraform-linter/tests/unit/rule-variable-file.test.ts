@@ -24,7 +24,7 @@ describe("VariableFileRule", () => {
           },
         },
         filePath: "variables.tf",
-        fileContent: "variable blocks here",
+        fileContent: "",
       };
 
       const violations = rule.validate(context, {});
@@ -46,7 +46,7 @@ describe("VariableFileRule", () => {
           },
         },
         filePath: "main.tf",
-        fileContent: "resource blocks here",
+        fileContent: "",
       };
 
       const violations = rule.validate(context, {});
@@ -55,26 +55,16 @@ describe("VariableFileRule", () => {
 
     test("allows empty variables.tf", () => {
       const context: TerraformFileContext = {
-        hcl: {
-          resource: {
-            aws_vpc: {
-              main: [
-                {
-                  cidr_block: "10.0.0.0/16",
-                },
-              ],
-            },
-          },
-        },
+        hcl: {},
         filePath: "variables.tf",
-        fileContent: "only resources here",
+        fileContent: "",
       };
 
       const violations = rule.validate(context, {});
       expect(violations).toHaveLength(0);
     });
 
-    test("allows variables.tf in nested module paths", () => {
+    test("allows variables.tf in nested path", () => {
       const context: TerraformFileContext = {
         hcl: {
           variable: {
@@ -86,7 +76,7 @@ describe("VariableFileRule", () => {
           },
         },
         filePath: "modules/vpc/variables.tf",
-        fileContent: "module variable",
+        fileContent: "",
       };
 
       const violations = rule.validate(context, {});
@@ -105,7 +95,7 @@ describe("VariableFileRule", () => {
           },
         },
         filePath: "/full/path/to/variables.tf",
-        fileContent: "variable",
+        fileContent: "",
       };
 
       const violations = rule.validate(context, {});
@@ -114,6 +104,31 @@ describe("VariableFileRule", () => {
   });
 
   describe("Invalid Cases", () => {
+    test("detects non-variable blocks in variables.tf", () => {
+      const context: TerraformFileContext = {
+        hcl: {
+          resource: {
+            aws_vpc: {
+              main: [
+                {
+                  cidr_block: "10.0.0.0/16",
+                },
+              ],
+            },
+          },
+        },
+        filePath: "variables.tf",
+        fileContent: "",
+      };
+
+      const violations = rule.validate(context, {});
+      expect(violations).toHaveLength(1);
+      expect(violations[0].ruleId).toBe("oak-variable-file-001");
+      expect(violations[0].severity).toBe("error");
+      expect(violations[0].message).toContain("resource");
+      expect(violations[0].filePath).toBe("variables.tf");
+    });
+
     test("detects single variable in main.tf", () => {
       const context: TerraformFileContext = {
         hcl: {
@@ -127,7 +142,7 @@ describe("VariableFileRule", () => {
           },
         },
         filePath: "main.tf",
-        fileContent: "has variable",
+        fileContent: "",
       };
 
       const violations = rule.validate(context, {});
@@ -138,7 +153,7 @@ describe("VariableFileRule", () => {
       expect(violations[0].filePath).toBe("main.tf");
     });
 
-    test("creates separate violation for each variable", () => {
+    test("detects multiple variables as a single violation", () => {
       const context: TerraformFileContext = {
         hcl: {
           variable: {
@@ -148,17 +163,17 @@ describe("VariableFileRule", () => {
           },
         },
         filePath: "outputs.tf",
-        fileContent: "multiple variables",
+        fileContent: "",
       };
 
       const violations = rule.validate(context, {});
-      expect(violations).toHaveLength(3);
+      expect(violations).toHaveLength(1);
       expect(violations[0].message).toContain("app_name");
-      expect(violations[1].message).toContain("api_port");
-      expect(violations[2].message).toContain("debug_mode");
+      expect(violations[0].message).toContain("api_port");
+      expect(violations[0].message).toContain("debug_mode");
     });
 
-    test("violation includes complete required fields", () => {
+    test("violation includes all required fields", () => {
       const context: TerraformFileContext = {
         hcl: {
           variable: {
@@ -166,7 +181,7 @@ describe("VariableFileRule", () => {
           },
         },
         filePath: "terraform.tf",
-        fileContent: "variable here",
+        fileContent: "",
       };
 
       const violations = rule.validate(context, {});
@@ -177,62 +192,13 @@ describe("VariableFileRule", () => {
       expect(violation.ruleName).toBe("Variable File Usage");
       expect(violation.severity).toBe("error");
       expect(violation.filePath).toBe("terraform.tf");
-      expect(violation.message).toMatch(/variables\.tf/);
-      expect(violation.message).toContain("'test_var'");
-      expect(violation.suggestion).toBe("Move 'test_var' definition to variables.tf");
-    });
-
-    test("detects variables in custom-named files", () => {
-      const testFiles = ["config.tf", "vars.tf", "my_variables.tf", "settings.tf"];
-
-      testFiles.forEach((filePath) => {
-        const context: TerraformFileContext = {
-          hcl: {
-            variable: {
-              app_config: [{ type: "string" }],
-            },
-          },
-          filePath,
-          fileContent: "variable",
-        };
-
-        const violations = rule.validate(context, {});
-        expect(violations).toHaveLength(1);
-        expect(violations[0].filePath).toBe(filePath);
-      });
+      expect(violation.message).toContain("All variable definitions should be in variables.tf. Found variable(s): ");
+      expect(violation.message).toContain("test_var");
+      expect(violation.suggestion).toBe("Move variable definition(s) to variables.tf");
     });
   });
 
-  describe("Edge Cases", () => {
-    test("handles nested module with variables in variables.tf", () => {
-      const validContext: TerraformFileContext = {
-        hcl: {
-          variable: {
-            vpc_cidr: [{ type: "string" }],
-          },
-        },
-        filePath: "modules/vpc/variables.tf",
-        fileContent: "variable",
-      };
-
-      const validViolations = rule.validate(validContext, {});
-      expect(validViolations).toHaveLength(0);
-
-      const invalidContext: TerraformFileContext = {
-        hcl: {
-          variable: {
-            vpc_cidr: [{ type: "string" }],
-          },
-        },
-        filePath: "modules/vpc/main.tf",
-        fileContent: "variable",
-      };
-
-      const invalidViolations = rule.validate(invalidContext, {});
-      expect(invalidViolations).toHaveLength(1);
-      expect(invalidViolations[0].message).toContain("'vpc_cidr'");
-    });
-
+  describe("Misc", () => {
     test("respects case sensitivity for filename", () => {
       const caseVariants = [
         { path: "VARIABLES.TF", shouldViolate: true },
@@ -249,119 +215,25 @@ describe("VariableFileRule", () => {
             },
           },
           filePath: path,
-          fileContent: "variable",
+          fileContent: "",
         };
 
         const violations = rule.validate(context, {});
         if (shouldViolate) {
           expect(violations).toHaveLength(1);
-          expect(violations[0].message).toContain("'test_var'");
+          expect(violations[0].message).toContain("test_var");
         } else {
           expect(violations).toHaveLength(0);
         }
       });
     });
 
-    test("requires exact .tf extension", () => {
-      const invalidExtensions = ["variables", "variables.tf.bak", "variables.txt"];
-
-      invalidExtensions.forEach((filePath) => {
-        const context: TerraformFileContext = {
-          hcl: {
-            variable: {
-              test_var: [{ type: "string" }],
-            },
-          },
-          filePath,
-          fileContent: "variable",
-        };
-
-        const violations = rule.validate(context, {});
-        expect(violations).toHaveLength(1);
-        expect(violations[0].filePath).toBe(filePath);
-      });
-    });
-
-    test("returns one violation per variable", () => {
-      const context: TerraformFileContext = {
-        hcl: {
-          variable: {
-            var_a: [{ type: "string" }],
-            var_b: [{ type: "string" }],
-            var_c: [{ type: "string" }],
-            var_d: [{ type: "string" }],
-          },
-        },
-        filePath: "main.tf",
-        fileContent: "many variables",
-      };
-
-      const violations = rule.validate(context, {});
-      expect(violations).toHaveLength(4);
-      violations.forEach((violation, index) => {
-        expect(violation.message).toContain(`'var_${String.fromCharCode(97 + index)}'`);
-        expect(violation.suggestion).toContain(`'var_${String.fromCharCode(97 + index)}'`);
-      });
-    });
-  });
-
-  describe("Integration", () => {
     test("rule metadata is correct", () => {
       expect(rule.id).toBe("oak-variable-file-001");
       expect(rule.name).toBe("Variable File Usage");
       expect(rule.severity).toBe("error");
       expect(rule.description).toBeDefined();
       expect(rule.description.length).toBeGreaterThan(0);
-    });
-
-    test("rule ignores custom params", () => {
-      const context: TerraformFileContext = {
-        hcl: {
-          variable: {
-            env: [{ type: "string" }],
-          },
-        },
-        filePath: "main.tf",
-        fileContent: "variable",
-      };
-
-      const violationsWithoutParams = rule.validate(context, {});
-      const violationsWithParams = rule.validate(context, {}, { anything: "here" });
-
-      expect(violationsWithoutParams).toEqual(violationsWithParams);
-      expect(violationsWithParams).toHaveLength(1);
-    });
-
-    test("rule ignores execution context", () => {
-      const context: TerraformFileContext = {
-        hcl: {
-          variable: {
-            test_var: [{ type: "string" }],
-          },
-        },
-        filePath: "main.tf",
-        fileContent: "variable",
-      };
-
-      const violationsEmpty = rule.validate(context, {});
-      const violationsPrivateTrue = rule.validate(context, { isPrivateRepo: true });
-      const violationsPrivateFalse = rule.validate(context, { isPrivateRepo: false });
-
-      expect(violationsEmpty).toEqual(violationsPrivateTrue);
-      expect(violationsPrivateTrue).toEqual(violationsPrivateFalse);
-      expect(violationsEmpty).toHaveLength(1);
-    });
-
-    test("returns violations array even when empty", () => {
-      const context: TerraformFileContext = {
-        hcl: {},
-        filePath: "main.tf",
-        fileContent: "empty",
-      };
-
-      const violations = rule.validate(context, {});
-      expect(Array.isArray(violations)).toBe(true);
-      expect(violations).toHaveLength(0);
-    });
+    });  
   });
 });

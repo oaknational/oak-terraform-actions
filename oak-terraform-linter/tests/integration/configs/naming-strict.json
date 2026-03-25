@@ -1,0 +1,11 @@
+{
+  "rules": [
+    {
+      "ruleType": "resource-naming",
+      "enabled": true,
+      "params": {
+        "pattern": "^[a-z0-9_]+$"
+      }
+    }
+  ]
+}

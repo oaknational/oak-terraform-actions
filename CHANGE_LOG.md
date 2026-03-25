@@ -1,3 +1,10 @@
+# [1.7.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.6.0...v1.7.0) (2026-03-25)
+
+
+### Features
+
+* **linter:** parse command ([31f7710](https://github.com/oaknational/oak-terraform-actions/commit/31f77100c3dbf683775281aa955c11661616b740))
+
 # [1.6.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.5.0...v1.6.0) (2026-03-25)
 
 

@@ -14,10 +14,7 @@ const AVAILABLE_RULES: Record<string, new () => Rule> = {
   "vercel-project": VercelProjectRule,
 };
 
-const DEFAULT_RULES: RuleConfig[] = [
-  { ruleType: "variable-file" },
-  { ruleType: "vercel-project" },
-];
+const DEFAULT_RULES: RuleConfig[] = [{ ruleType: "variable-file" }, { ruleType: "vercel-project" }];
 
 export class RuleLoader {
   async loadRulesFromFile(filePath: string): Promise<Rule[]> {

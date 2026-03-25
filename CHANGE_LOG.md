@@ -1,3 +1,25 @@
+# [1.9.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.8.0...v1.9.0) (2026-03-25)
+
+
+### Features
+
+* **rule:** add test for multiple non-vars in var file ([9229f63](https://github.com/oaknational/oak-terraform-actions/commit/9229f63218ec30b1374cefaac97ee84fcfae5ec4))
+* **rule:** add unit tests ([b0e9dff](https://github.com/oaknational/oak-terraform-actions/commit/b0e9dff02c0592fe637b356a9378d43299bb48b4))
+* **rule:** better example ([3ceb6b9](https://github.com/oaknational/oak-terraform-actions/commit/3ceb6b9e5120d141c4a60c83d9f16a07b6c901bb))
+* **rule:** comment ([dc49a54](https://github.com/oaknational/oak-terraform-actions/commit/dc49a540c41ac2c781e957f5c24b4de81bb865d0))
+* **rule:** e2e ([7b54fd3](https://github.com/oaknational/oak-terraform-actions/commit/7b54fd3562c449cd18fd2c1afed3f0c086cb8889))
+* **rule:** fix tests ([54f5836](https://github.com/oaknational/oak-terraform-actions/commit/54f5836ba66df5d84623cc370db575840419d5f2))
+* **rule:** fmt ([b994b4c](https://github.com/oaknational/oak-terraform-actions/commit/b994b4c118cd94928f237c10c3ec0b2c89c17d1f))
+* **rule:** fmt ([c6cedc1](https://github.com/oaknational/oak-terraform-actions/commit/c6cedc1da3c2ecdbfbf9329e920dfe9db1169357))
+* **rule:** initial variable rule impl ([9d91918](https://github.com/oaknational/oak-terraform-actions/commit/9d91918ed7941875cd97f6856edf31a1a15c4afd))
+* **rule:** pr feedback - tidy up tests ([0654b92](https://github.com/oaknational/oak-terraform-actions/commit/0654b92a0e4d11ac4869cd4c53bc146081d53783))
+* **rule:** reduce violation spam, only variables in variables.tf ([9ac5de5](https://github.com/oaknational/oak-terraform-actions/commit/9ac5de554c492f13bc2c932c98c460f6acbe4976))
+* **rule:** remove overkill tests ([0303d42](https://github.com/oaknational/oak-terraform-actions/commit/0303d42c61c32ce697b48887ebfaabec4b1f75d4))
+* **rule:** rm unnecessary describe groupings ([7ec8eef](https://github.com/oaknational/oak-terraform-actions/commit/7ec8eefa9bbad2cdcb0d4e37bb937b177c00af12))
+* **rule:** split violations ([3caea5e](https://github.com/oaknational/oak-terraform-actions/commit/3caea5e7af77fb9d6b8dbf31d423668f4750ee2e))
+* **rule:** test parser will only see .tf files ([cc83382](https://github.com/oaknational/oak-terraform-actions/commit/cc83382fdb9ddf45f14d2b17e64a8479c0d8f3fd))
+* **rule:** update example ([1b4e119](https://github.com/oaknational/oak-terraform-actions/commit/1b4e119d09b64c8886889a0dcdb1f113b58e75f0))
+
 # [1.8.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.7.0...v1.8.0) (2026-03-25)
 
 

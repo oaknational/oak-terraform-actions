@@ -31,8 +31,15 @@ export class VercelProjectRule implements Rule {
       }
 
       const absolutePath = path.resolve(__dirname, context.filePath);
-      if (/infrastructure\/project\/.+\..+$/.test(absolutePath)) {
-        console.log(`File ${context.filePath} correctly uses the 'vercel_project' module in the expected path.`);
+      if (!absolutePath.endsWith(path.join("infrastructure", "project", path.basename(context.filePath)))) {
+        violations.push({
+          ruleId: this.id,
+          ruleName: this.name,
+          severity: this.severity,
+          filePath: context.filePath,
+          message: `The 'vercel_project' module should be used in files located under 'infrastructure/project/'`,
+          suggestion: `Configure the 'vercel_project' module in a file at the root of 'infrastructure/project/'`,
+        });
       }
     }
 

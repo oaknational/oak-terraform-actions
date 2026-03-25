@@ -1,3 +1,19 @@
+# [1.5.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.4.2...v1.5.0) (2026-03-25)
+
+
+### Features
+
+* **linter:** add prettier and lint config ([30e4135](https://github.com/oaknational/oak-terraform-actions/commit/30e413590a8f46ccf5a8c717fb98467f1628e917))
+* **linter:** add recursive opt and skips for modules ([a33c817](https://github.com/oaknational/oak-terraform-actions/commit/a33c8174a6c42b15136ac4349568c2abf9bfa7fc))
+* **linter:** clearer type ([2758019](https://github.com/oaknational/oak-terraform-actions/commit/2758019fc00c89abd049e1bbab66b37a20a1dca3))
+* **linter:** configs ([ecfecc2](https://github.com/oaknational/oak-terraform-actions/commit/ecfecc2f3ed52011585996460a98855a95562ecf))
+* **linter:** core ([ed1fd37](https://github.com/oaknational/oak-terraform-actions/commit/ed1fd379d210c7a489b87bad0eb10d37ca63ffb4))
+* **linter:** fmt ([eba4a9f](https://github.com/oaknational/oak-terraform-actions/commit/eba4a9fbae0a8dd4c9e8481fa9526972e7345ae8))
+* **linter:** format ([91d5cb3](https://github.com/oaknational/oak-terraform-actions/commit/91d5cb39a7f8668b8173bc171aeb8579086b25dd))
+* **linter:** format ([8d1d105](https://github.com/oaknational/oak-terraform-actions/commit/8d1d10579d9ffc6d338489cff0837b6834e9f0b0))
+* **linter:** include tests in tsconfig ([4e226b5](https://github.com/oaknational/oak-terraform-actions/commit/4e226b5ef31f7e2c296d3efe89fbc0243dc7e12b))
+* **linter:** remove tests, keep jest types ([e40e0c8](https://github.com/oaknational/oak-terraform-actions/commit/e40e0c8cac16f203de2ed79e2d0d6e811cd38ce9))
+
 ## [1.4.2](https://github.com/oaknational/oak-terraform-actions/compare/v1.4.1...v1.4.2) (2026-03-11)
 
 ## [1.4.1](https://github.com/oaknational/oak-terraform-actions/compare/v1.4.0...v1.4.1) (2026-02-18)

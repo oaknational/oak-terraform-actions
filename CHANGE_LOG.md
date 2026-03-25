@@ -1,3 +1,11 @@
+# [1.8.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.7.0...v1.8.0) (2026-03-25)
+
+
+### Features
+
+* **linter:** ci ([8d81a61](https://github.com/oaknational/oak-terraform-actions/commit/8d81a61a494104e827560b38400b77f58a7b3a3d))
+* **linter:** force ci run in stacked pr ([f8f5ca0](https://github.com/oaknational/oak-terraform-actions/commit/f8f5ca06cdd7b5ad43426c21009564575bcec2ec))
+
 # [1.7.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.6.0...v1.7.0) (2026-03-25)
 
 

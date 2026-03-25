@@ -43,7 +43,6 @@ export class VercelProjectRule implements Rule {
       }
     }
 
-
     return violations;
   }
 }

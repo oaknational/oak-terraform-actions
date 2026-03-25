@@ -4,6 +4,7 @@ import { RulesEngine } from "../../src/rules/engine";
 import { ExecutionContext } from "../../src/core/types";
 import { ResourceNamingRule } from "../../src/rules/rule-resource-naming";
 import { VariableFileRule } from "../../src/rules/rule-variable-file";
+import { VercelProjectRule } from "../../src/rules/rule-vercel-project";
 
 describe("End-to-End Linting", () => {
   const parser = new TerraformParser();
@@ -33,12 +34,12 @@ describe("End-to-End Linting", () => {
   });
 
   test("passes clean Terraform files", async () => {
-    const fixtureDir = path.join(__dirname, "../integration/fixtures/valid-terraform");
+    const fixtureDir = path.join(__dirname, "./fixtures/valid-terraform");
     const contexts = await parser.parseDirectory(fixtureDir);
 
+    const configPath = path.join(__dirname, "./configs/all.json");
     const engine = new RulesEngine();
-    engine.registerRule(new ResourceNamingRule());
-    engine.registerRule(new VariableFileRule());
+    await engine.loadRules(configPath);
 
     const executionContext: ExecutionContext = { isPrivateRepo: false };
     const allViolations = contexts.flatMap((ctx) => engine.executeRules(ctx, executionContext));

@@ -4,7 +4,8 @@ import path from "path";
 export class VercelProjectRule implements Rule {
   id = "oak-vercel-project-001";
   name = "Vercel Project Module Location";
-  description = "If the Oak 'vercel_project' module is used, the configuration should be under the path 'infrastructure/project'.";
+  description =
+    "If the Oak 'vercel_project' module is used, the configuration should be under the path 'infrastructure/project'.";
   severity = "error" as const;
   params: Record<string, unknown> = {};
 
@@ -25,13 +26,19 @@ export class VercelProjectRule implements Rule {
       }
 
       const source = moduleConfig[0].source as string | undefined;
-      const usesVercelProjectModule = source && source.startsWith("github.com/oaknational/oak-terraform-modules//modules/vercel_project");
+      const usesVercelProjectModule =
+        source &&
+        source.startsWith("github.com/oaknational/oak-terraform-modules//modules/vercel_project");
       if (!usesVercelProjectModule) {
         continue;
       }
 
       const absolutePath = path.resolve(__dirname, context.filePath);
-      if (!absolutePath.endsWith(path.join("infrastructure", "project", path.basename(context.filePath)))) {
+      if (
+        !absolutePath.endsWith(
+          path.join("infrastructure", "project", path.basename(context.filePath))
+        )
+      ) {
         violations.push({
           ruleId: this.id,
           ruleName: this.name,

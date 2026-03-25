@@ -2,40 +2,41 @@ import * as path from "path";
 import { TerraformParser } from "../../src/core/parser";
 import { RulesEngine } from "../../src/rules/engine";
 import { ExecutionContext } from "../../src/core/types";
-import { ResourceNamingRule } from "../../src/rules/rule-resource-naming";
-import { VariableFileRule } from "../../src/rules/rule-variable-file";
-import { VercelProjectRule } from "../../src/rules/rule-vercel-project";
 
 describe("End-to-End Linting", () => {
   const parser = new TerraformParser();
 
-  test("detects naming violations in fixture directory", async () => {
-    const fixtureDir = path.join(__dirname, "../integration/fixtures/naming-violations");
+  test("parser processes multiple files", async () => {
+    const fixtureDir = path.join(__dirname, "./fixtures/valid-terraform");
     const contexts = await parser.parseDirectory(fixtureDir);
 
+    expect(contexts.length).toBeGreaterThan(1);
+    expect(contexts.some((ctx) => ctx.filePath.endsWith("good-naming.tf"))).toBe(true);
+  });
+
+  test("loads rules from config and detects violations in invalid Terraform files", async () => {
+    const fixtureDir = path.join(__dirname, "./fixtures/invalid-terraform");
+    const contexts = await parser.parseDirectory(fixtureDir);
+    expect(contexts.length).toBeGreaterThan(0);
+    expect(contexts.some((ctx) => ctx.filePath.endsWith("bad-naming.tf"))).toBe(true);
+
     const engine = new RulesEngine();
-    engine.registerRule(new ResourceNamingRule());
+    await engine.loadRules(path.join(__dirname, "./configs/all.json"));
 
     const executionContext: ExecutionContext = { isPrivateRepo: false };
     const allViolations = contexts.flatMap((ctx) => engine.executeRules(ctx, executionContext));
 
     expect(allViolations.length).toBeGreaterThan(0);
-    expect(allViolations[0].ruleId).toBe("oak-resource-naming-001");
-
-    // check for non nested violation in the nested subdirectory
-    const nonNestedViolation = allViolations.find((v) => !v.filePath.includes("nested/"));
-    expect(nonNestedViolation).toBeDefined();
-    expect(nonNestedViolation?.ruleId).toBe("oak-resource-naming-001");
-
-    // check for violation in the nested subdirectory
-    const nestedViolation = allViolations.find((v) => v.filePath.includes("nested/"));
-    expect(nestedViolation).toBeDefined();
-    expect(nestedViolation?.ruleId).toBe("oak-resource-naming-001");
+    expect(allViolations.some((v) => v.ruleId === "oak-resource-naming-001")).toBe(true);
+    expect(allViolations.some((v) => v.ruleId === "oak-variable-file-001")).toBe(true);
+    expect(allViolations.some((v) => v.ruleId === "oak-vercel-project-001")).toBe(true);
   });
 
-  test("passes clean Terraform files", async () => {
+  test("loads rules from config and passes clean Terraform files", async () => {
     const fixtureDir = path.join(__dirname, "./fixtures/valid-terraform");
     const contexts = await parser.parseDirectory(fixtureDir);
+    expect(contexts.length).toBeGreaterThan(0);
+    expect(contexts.some((ctx) => ctx.filePath.endsWith("good-naming.tf"))).toBe(true);
 
     const configPath = path.join(__dirname, "./configs/all.json");
     const engine = new RulesEngine();
@@ -47,32 +48,12 @@ describe("End-to-End Linting", () => {
     expect(allViolations).toHaveLength(0);
   });
 
-  test("processes multiple files", async () => {
-    const fixtureDir = path.join(__dirname, "../integration/fixtures/valid-terraform");
-    const contexts = await parser.parseDirectory(fixtureDir);
-
-    expect(contexts.length).toBeGreaterThan(1);
-  });
-
-  test("loads and applies rules from strict config", async () => {
-    const fixtureDir = path.join(__dirname, "../integration/fixtures/naming-violations");
-    const configPath = path.join(__dirname, "../integration/configs/naming-strict.json");
-    const contexts = await parser.parseDirectory(fixtureDir);
-
-    const engine = new RulesEngine();
-    await engine.loadRules(configPath);
-
-    const executionContext: ExecutionContext = { isPrivateRepo: false };
-    const allViolations = contexts.flatMap((ctx) => engine.executeRules(ctx, executionContext));
-
-    expect(allViolations.length).toBeGreaterThan(0);
-    expect(allViolations[0].ruleId).toBe("oak-resource-naming-001");
-  });
-
   test("loads and respects disabled rules from config", async () => {
-    const fixtureDir = path.join(__dirname, "../integration/fixtures/naming-violations");
-    const configPath = path.join(__dirname, "../integration/configs/naming-relaxed.json");
+    const fixtureDir = path.join(__dirname, "./fixtures/invalid-terraform");
+    const configPath = path.join(__dirname, "./configs/naming-disabled.json");
     const contexts = await parser.parseDirectory(fixtureDir);
+    expect(contexts.length).toBeGreaterThan(0);
+    expect(contexts.some((ctx) => ctx.filePath.endsWith("bad-naming.tf"))).toBe(true);
 
     const engine = new RulesEngine();
     await engine.loadRules(configPath);

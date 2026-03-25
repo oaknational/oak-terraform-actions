@@ -67,7 +67,6 @@ describe("VercelProjectRule", () => {
     expect(violations[0].severity).toBe("error");
     expect(violations[0].message).toContain("infrastructure/project");
     expect(violations[0].suggestion).toContain("infrastructure/project");
-
   });
 
   test("allows any file without vercel_project", () => {

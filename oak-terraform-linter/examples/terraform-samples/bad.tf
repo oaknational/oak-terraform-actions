@@ -16,3 +16,7 @@ variable "EnvironmentName" {
   type = string
   default = "prod"
 }
+
+variable "example_var" {
+  type = string
+}

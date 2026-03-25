@@ -1,3 +1,17 @@
+# [1.6.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.5.0...v1.6.0) (2026-03-25)
+
+
+### Features
+
+* **linter:** examples ([d85ec83](https://github.com/oaknational/oak-terraform-actions/commit/d85ec83900c0bdae4c0adbba4be91c77ad70599f))
+* **linter:** fix examples ([ef90a80](https://github.com/oaknational/oak-terraform-actions/commit/ef90a801112fa6d94bf9fc47fe7406552391259f))
+* **linter:** format ([23f33ac](https://github.com/oaknational/oak-terraform-actions/commit/23f33ac03851a52291ecd2e501cbdce0dea077ba))
+* **linter:** format ([b285717](https://github.com/oaknational/oak-terraform-actions/commit/b2857178f06890d0e2740d238e647272eb48512a))
+* **linter:** parser e2e test ([833cff4](https://github.com/oaknational/oak-terraform-actions/commit/833cff45b8a1de53fa3dddf3da0a4e110e5a3882))
+* **linter:** parser tests ([23a8a2c](https://github.com/oaknational/oak-terraform-actions/commit/23a8a2c7e4a08854a6ef955d59ecdde8eec41a78))
+* **linter:** rename dir ([7891f8d](https://github.com/oaknational/oak-terraform-actions/commit/7891f8dffa4ff1c04dc47c6741a70d7e97e59eff))
+* **linter:** tests ([00d0912](https://github.com/oaknational/oak-terraform-actions/commit/00d091241efc1479c11a9008d43eaea41964909e))
+
 # [1.5.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.4.2...v1.5.0) (2026-03-25)
 
 

@@ -108,6 +108,16 @@ If added to `DEFAULT_RULES` your new rule will be run if no config file is passe
 }
 ```
 
+### Step 5: Tests
+
+As well as writing unit tests for your rule please also:
+
+1. Add it to `tests/integration/configs/all.json`
+1. Update or add to the files in `tests/integration/fixtures/valid-terraform/` so your rule will pass.
+1. Update or add to the files in `tests/integration/fixtures/invalid-terraform/` so your rule will detect at least 1 violation.
+1. Make sure all end-to-end tests pass `npm run test -- tests/integration`
+1. There should be no need to add new end-to-end tests but use your judgement.
+
 ## Best Practices
 
 1. **Clear IDs**: Use format `{organization}-{rule-name}-{version}` (e.g., `oak-naming-001`)

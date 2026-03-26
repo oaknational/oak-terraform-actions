@@ -52,7 +52,8 @@ describe("VercelProjectRule", () => {
         module: {
           vercel: [
             {
-              source: "github.com/oaknational/oak-terraform-modules//modules/vercel_project?ref=v1.1.1",
+              source:
+                "github.com/oaknational/oak-terraform-modules//modules/vercel_project?ref=v1.1.1",
             },
           ],
         },
@@ -71,7 +72,8 @@ describe("VercelProjectRule", () => {
         module: {
           vercel: [
             {
-              source: "github.com/oaknational/oak-terraform-modules//modules/vercel_project?ref=v1.1.1",
+              source:
+                "github.com/oaknational/oak-terraform-modules//modules/vercel_project?ref=v1.1.1",
             },
           ],
         },

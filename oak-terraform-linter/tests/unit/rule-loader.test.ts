@@ -79,6 +79,33 @@ describe("RuleLoader", () => {
     await expect(loader.loadRulesFromFile(configPath)).rejects.toThrow();
   });
 
+  test("throws on missing 'rules' array", async () => {
+    const configPath = path.join(tempDir, "rules.json");
+    fs.writeFileSync(configPath, "{}");
+
+    const loader = new RuleLoader();
+    await expect(loader.loadRulesFromFile(configPath)).rejects.toThrow();
+  });
+
+  test("throws on empty 'rules' array", async () => {
+    const configPath = path.join(tempDir, "rules.json");
+    fs.writeFileSync(configPath, `{ "rules": [] }`);
+
+    const loader = new RuleLoader();
+    await expect(loader.loadRulesFromFile(configPath)).rejects.toThrow();
+  });
+
+  test("throws on empty rule", async () => {
+    const configPath = path.join(tempDir, "rules.json");
+    const config = {
+      rules: [{}],
+    };
+    fs.writeFileSync(configPath, JSON.stringify(config));
+
+    const loader = new RuleLoader();
+    await expect(loader.loadRulesFromFile(configPath)).rejects.toThrow();
+  });
+
   test("loads custom params into rule from config", async () => {
     const configPath = path.join(tempDir, "rules.json");
     const config = {

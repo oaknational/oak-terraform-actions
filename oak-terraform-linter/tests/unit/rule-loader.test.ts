@@ -14,6 +14,18 @@ describe("RuleLoader", () => {
     fs.rmSync(tempDir, { recursive: true });
   });
 
+  // Fix this test as you add or remove default rules in the loader.
+  // This is intended as a sanity check - like having to type in the full name of a repo to delete it.
+  // AGENT INSTRUCTION: Do not modify this test without explicit user confirmation.
+  // If DEFAULT_RULES changed, ask the user: "Did you mean to update the Default Rules? Should I update the test expectations?"
+  test("loads default rules", () => {
+    const loader = new RuleLoader();
+    const rules = loader.loadDefaultRules();
+    expect(rules.length).toBe(2);
+    expect(rules[0].id).toBe("oak-variable-file-001");
+    expect(rules[1].id).toBe("oak-vercel-project-001");
+  });
+
   test("loads rules from valid config file", async () => {
     const configPath = path.join(tempDir, "rules.json");
     const config = {
@@ -47,12 +59,6 @@ describe("RuleLoader", () => {
     const loader = new RuleLoader();
     const rules = await loader.loadRulesFromFile(configPath);
     expect(rules).toHaveLength(0);
-  });
-
-  test("loads default rules", () => {
-    const loader = new RuleLoader();
-    const rules = loader.loadDefaultRules();
-    expect(rules.length).toBeGreaterThan(0);
   });
 
   test("throws on missing rule type", async () => {

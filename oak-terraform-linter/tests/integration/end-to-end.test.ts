@@ -30,6 +30,7 @@ describe("End-to-End Linting", () => {
     expect(allViolations.some((v) => v.ruleId === "oak-resource-naming-001")).toBe(true);
     expect(allViolations.some((v) => v.ruleId === "oak-variable-file-001")).toBe(true);
     expect(allViolations.some((v) => v.ruleId === "oak-vercel-project-001")).toBe(true);
+    expect(allViolations.some((v) => v.ruleId === "oak-terraform-block-001")).toBe(true);
   });
 
   test("loads rules from config and passes clean Terraform files", async () => {

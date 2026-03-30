@@ -3,6 +3,7 @@ import { Rule, RuleConfig } from "../core/types";
 import { ResourceNamingRule } from "./rule-resource-naming";
 import { HelperPassingRule, HelperFailingRule, HelperErrorRule } from "./rule-helpers";
 import { VariableFileRule } from "./rule-variable-file";
+import { VercelProjectRule } from "./rule-vercel-project";
 
 const AVAILABLE_RULES: Record<string, new () => Rule> = {
   "helper-always-passes": HelperPassingRule,
@@ -10,9 +11,10 @@ const AVAILABLE_RULES: Record<string, new () => Rule> = {
   "helper-always-errors": HelperErrorRule,
   "resource-naming": ResourceNamingRule,
   "variable-file": VariableFileRule,
+  "vercel-project": VercelProjectRule,
 };
 
-const DEFAULT_RULES: RuleConfig[] = [{ ruleType: "variable-file" }];
+const DEFAULT_RULES: RuleConfig[] = [{ ruleType: "variable-file" }, { ruleType: "vercel-project" }];
 
 export class RuleLoader {
   async loadRulesFromFile(filePath: string): Promise<Rule[]> {

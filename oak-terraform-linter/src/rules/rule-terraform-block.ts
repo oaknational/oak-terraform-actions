@@ -4,7 +4,8 @@ import path from "path";
 export class TerraformBlockRule implements Rule {
   id = "oak-terraform-block-001";
   name = "Terraform Block Usage";
-  description = "Enforces Oak conventions around where 'terraform' blocks can be used and what they can contain, based on file naming conventions and repo privacy.";
+  description =
+    "Enforces Oak conventions around where 'terraform' blocks can be used and what they can contain, based on file naming conventions and repo privacy.";
   severity = "error" as const;
   params: Record<string, unknown> = {};
 
@@ -25,40 +26,52 @@ export class TerraformBlockRule implements Rule {
     }
   }
 
-  validateTerraformFile(context: TerraformFileContext, executionContext: ExecutionContext): LintViolation[] {
+  validateTerraformFile(
+    context: TerraformFileContext,
+    executionContext: ExecutionContext
+  ): LintViolation[] {
     const violations: LintViolation[] = [];
-    
+
     // terraform blocks are allowed, no cloud blocks
     const terraformProps = getTerraformBlockKeys(context.hcl);
     if (terraformProps.has("cloud")) {
       violations.push(this.newCloudBlockViolation(context, executionContext));
     }
-    
+
     // no non-terraform blocks
     const forbiddenBlocks = Object.keys(context.hcl).filter((key) => key !== "terraform");
     if (forbiddenBlocks.length > 0) {
       violations.push(this.newNonTerraformBlockViolation(context, forbiddenBlocks));
-    } 
+    }
 
     return violations;
   }
 
-  validateBackendFile(context: TerraformFileContext, executionContext: ExecutionContext): LintViolation[] {
+  validateBackendFile(
+    context: TerraformFileContext,
+    executionContext: ExecutionContext
+  ): LintViolation[] {
     // if public shouldn't exist
     if (!executionContext.isPrivateRepo) {
-      return [this.newForbiddenFileViolation(context, executionContext,
-        `Rename backend.tf to backend.tf.template`
-      )];
+      return [
+        this.newForbiddenFileViolation(
+          context,
+          executionContext,
+          `Rename backend.tf to backend.tf.template`
+        ),
+      ];
     }
-    
+
     const violations: LintViolation[] = [];
 
     // terraform blocks are allowed with cloud blocks ONLY (no other props allowed).
-    const forbiddenTFProps = Array.from(getTerraformBlockKeys(context.hcl)).filter((key) => key !== "cloud");
+    const forbiddenTFProps = Array.from(getTerraformBlockKeys(context.hcl)).filter(
+      (key) => key !== "cloud"
+    );
     if (forbiddenTFProps.length > 0) {
       violations.push(this.newNonCloudPropViolation(context, forbiddenTFProps));
     }
-    
+
     // no non-terraform blocks
     const forbiddenBlocks = Object.keys(context.hcl).filter((key) => key !== "terraform");
     if (forbiddenBlocks.length > 0) {
@@ -68,18 +81,27 @@ export class TerraformBlockRule implements Rule {
     return violations;
   }
 
-  validateBackendTemplateFile(context: TerraformFileContext, executionContext: ExecutionContext): LintViolation[] {
+  validateBackendTemplateFile(
+    context: TerraformFileContext,
+    executionContext: ExecutionContext
+  ): LintViolation[] {
     // if private shouldn't exist
     if (executionContext.isPrivateRepo) {
-      return [this.newForbiddenFileViolation(context, executionContext,
-        `Rename backend.tf.template to backend.tf`
-      )];
+      return [
+        this.newForbiddenFileViolation(
+          context,
+          executionContext,
+          `Rename backend.tf.template to backend.tf`
+        ),
+      ];
     }
 
     const violations: LintViolation[] = [];
 
     // terraform blocks are allowed with cloud blocks ONLY (no other props allowed).
-    const forbiddenTFProps = Array.from(getTerraformBlockKeys(context.hcl)).filter((key) => key !== "cloud");
+    const forbiddenTFProps = Array.from(getTerraformBlockKeys(context.hcl)).filter(
+      (key) => key !== "cloud"
+    );
     if (forbiddenTFProps.length > 0) {
       violations.push(this.newNonCloudPropViolation(context, forbiddenTFProps));
     }
@@ -93,9 +115,19 @@ export class TerraformBlockRule implements Rule {
     // cloud organization should be "your-organization-name"
     if (context.hcl.terraform && Array.isArray(context.hcl.terraform)) {
       context.hcl.terraform.forEach((terraformBlock: Record<string, unknown>) => {
-        if (terraformBlock && typeof terraformBlock === "object" && terraformBlock.cloud && Array.isArray(terraformBlock.cloud)) {
+        if (
+          terraformBlock &&
+          typeof terraformBlock === "object" &&
+          terraformBlock.cloud &&
+          Array.isArray(terraformBlock.cloud)
+        ) {
           terraformBlock.cloud.forEach((cloudBlock: Record<string, unknown>) => {
-            if (cloudBlock && typeof cloudBlock === "object" && cloudBlock.organization && cloudBlock.organization !== "your-organization-name") {
+            if (
+              cloudBlock &&
+              typeof cloudBlock === "object" &&
+              cloudBlock.organization &&
+              cloudBlock.organization !== "your-organization-name"
+            ) {
               violations.push({
                 ruleId: this.id,
                 ruleName: this.name,
@@ -122,7 +154,10 @@ export class TerraformBlockRule implements Rule {
     return [];
   }
 
-  newCloudBlockViolation(context: TerraformFileContext, executionContext: ExecutionContext): LintViolation {
+  newCloudBlockViolation(
+    context: TerraformFileContext,
+    executionContext: ExecutionContext
+  ): LintViolation {
     const repoPrivacy = executionContext.isPrivateRepo ? "private" : "public";
     const targetFile = executionContext.isPrivateRepo ? "backend.tf" : "backend.tf.template";
     return {
@@ -158,7 +193,10 @@ export class TerraformBlockRule implements Rule {
     };
   }
 
-  newNonTerraformBlockViolation(context: TerraformFileContext, forbiddenBlocks: string[]): LintViolation {
+  newNonTerraformBlockViolation(
+    context: TerraformFileContext,
+    forbiddenBlocks: string[]
+  ): LintViolation {
     const forbiddenBlocksStr = forbiddenBlocks.join(", ");
     return {
       ruleId: this.id,
@@ -170,7 +208,11 @@ export class TerraformBlockRule implements Rule {
     };
   }
 
-  newForbiddenFileViolation(context: TerraformFileContext, executionContext: ExecutionContext, suggestion: string): LintViolation {
+  newForbiddenFileViolation(
+    context: TerraformFileContext,
+    executionContext: ExecutionContext,
+    suggestion: string
+  ): LintViolation {
     const repoPrivacy = executionContext.isPrivateRepo ? "private" : "public";
     return {
       ruleId: this.id,

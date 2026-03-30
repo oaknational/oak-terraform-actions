@@ -1,3 +1,10 @@
+# [1.10.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.9.0...v1.10.0) (2026-03-30)
+
+
+### Features
+
+* Terraform Rule - vercel_project module location [ENG-1506] ([#33](https://github.com/oaknational/oak-terraform-actions/issues/33)) ([94308a0](https://github.com/oaknational/oak-terraform-actions/commit/94308a0e6a1af7ee7d3902af0d8d30d74fd992e4))
+
 # [1.9.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.8.0...v1.9.0) (2026-03-25)
 
 

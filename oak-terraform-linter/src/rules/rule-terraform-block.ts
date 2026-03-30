@@ -166,7 +166,7 @@ export class TerraformBlockRule implements Rule {
       severity: this.severity,
       filePath: context.filePath,
       message: `In a ${repoPrivacy} repo 'terraform' blocks should not contain 'cloud' blocks outside of ${targetFile}`,
-      suggestion: `Remove the 'cloud' block from in ${path.basename(context.filePath)} and move it inside a 'terraform' block in ${targetFile}`,
+      suggestion: `Remove the 'cloud' block from ${path.basename(context.filePath)} and move it inside a 'terraform' block in ${targetFile}`,
     };
   }
 

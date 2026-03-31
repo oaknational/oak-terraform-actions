@@ -115,6 +115,7 @@ As well as writing unit tests for your rule please also:
 1. Add it to `tests/integration/configs/all.json`
 1. Update or add to the files in `tests/integration/fixtures/valid-terraform/` so your rule will pass.
 1. Update or add to the files in `tests/integration/fixtures/invalid-terraform/` so your rule will detect at least 1 violation.
+1. Add code to verify that violations for your rule are being generated in the end to end test "loads rules from config and detects violations in invalid Terraform files".
 1. Make sure all end-to-end tests pass `npm run test -- tests/integration`
 1. There should be no need to add new end-to-end tests but use your judgement.
 

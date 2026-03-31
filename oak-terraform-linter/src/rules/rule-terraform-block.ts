@@ -14,6 +14,26 @@ export class TerraformBlockRule implements Rule {
     executionContext: ExecutionContext,
     _params?: Record<string, unknown>
   ): LintViolation[] {
+    // empty terraform blocks are not allowed anywhere
+    if (
+      context.hcl.terraform &&
+      Array.isArray(context.hcl.terraform) &&
+      context.hcl.terraform.some(
+        (block) => block && typeof block === "object" && Object.keys(block).length === 0
+      )
+    ) {
+      return [
+        {
+          ruleId: this.id,
+          ruleName: this.name,
+          severity: this.severity,
+          filePath: context.filePath,
+          message: `Empty 'terraform' blocks are not allowed in any file.`,
+          suggestion: `Remove the empty 'terraform' block from ${path.basename(context.filePath)}`,
+        },
+      ];
+    }
+
     const fileName = path.basename(context.filePath);
     if (fileName === "terraform.tf") {
       return this.validateTerraformFile(context, executionContext);

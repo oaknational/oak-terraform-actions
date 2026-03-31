@@ -4,17 +4,14 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "lib": ["ES2020"],
-    "outDir": "./dist",
-    "rootDir": "./src",
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "resolveJsonModule": true,
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "types": ["jest", "node"]
+    "types": ["node"],
+    "rootDir": "./src",
+    "outDir": "./dist"
   },
   "include": ["src/**/*"],
-  "exclude": ["node_modules", "dist", "**/commands"]
+  "exclude": ["src/commands"]
 }

@@ -14,6 +14,22 @@ runs:
       with:
         terraform_version: ${{ inputs.terraform_version }}
 
+    - name: Check backend.tf is gitignored in public repos
+      shell: bash
+      run: |
+        cd ${{ inputs.terraform_base_dir }}
+        
+        # Skip check for private repositories
+        if [ "${{ github.event.repository.private }}" = "true" ]; then
+          exit 0
+        fi
+        
+        # Fail if backend.tf is not gitignored in public repos
+        if ! git check-ignore -q backend.tf; then
+          echo "ERROR: backend.tf is not gitignored in a public repository!"
+          exit 1
+        fi
+
     - name: Generate backend.tf from backend.tf.template
       shell: bash
       run: |

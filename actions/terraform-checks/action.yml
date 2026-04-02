@@ -13,9 +13,9 @@ runs:
       uses: actions/cache@v4
       with:
         path: ${{ github.action_path }}/../../oak-terraform-linter/node_modules
-        key: linter-${{ hashFiles('**/oak-terraform-linter/package-lock.json') }}
+        key: oak-terraform-linter-${{ runner.os }}-v1
         restore-keys: |
-          linter-
+          oak-terraform-linter-${{ runner.os }}-
 
     - name: Setup oak-terraform-linter dependencies
       shell: bash

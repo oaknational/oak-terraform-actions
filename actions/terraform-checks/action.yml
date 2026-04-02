@@ -9,6 +9,22 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Setup oak-terraform-linter dependencies
+      shell: bash
+      working-directory: oak-terraform-linter
+      run: |
+        npm ci --prefer-offline --no-audit
+        npm run build
+
+    - name: Run oak-terraform-linter
+      shell: bash
+      working-directory: oak-terraform-linter
+      run: |
+        npm run linter -- \
+          --path "${{ github.workspace }}/${{ inputs.terraform_base_dir }}" \
+          --private-repo "${{ github.event.repository.private }}" \
+          --strict
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:

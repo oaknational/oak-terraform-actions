@@ -20,7 +20,7 @@ runs:
       shell: bash
       working-directory: ${{ github.action_path }}/../../oak-terraform-linter
       run: |
-        npm run linter -- \
+        node dist/index.js \
           --path "${{ github.workspace }}/${{ inputs.terraform_base_dir }}" \
           --private-repo "${{ github.event.repository.private }}" \
           --strict

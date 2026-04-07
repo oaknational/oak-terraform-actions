@@ -9,22 +9,18 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Copy oak-terraform-linter package-lock for caching
+    - name: Copy oak-terraform-linter package-lock
+    # We cannot resolve relative paths in the setup-node step so copy it here to generate the cache key.
       shell: bash
       run: |
-        cp ${{ github.action_path }}/../../oak-terraform-linter/package-lock.json ${{ github.workspace }}/oak-linter-package-lock.json
+        cp ${{ github.action_path }}/../../oak-terraform-linter/package-lock.json ${{ runner.temp }}/oak-linter-package-lock.json
 
     - name: Setup Node.js with caching
       uses: actions/setup-node@v4
       with:
         node-version: "20"
         cache: npm
-        cache-dependency-path: oak-linter-package-lock.json
-
-    - name: Clean up copied package-lock
-      shell: bash
-      run: |
-        rm ${{ github.workspace }}/oak-linter-package-lock.json
+        cache-dependency-path: ${{ runner.temp }}/oak-linter-package-lock.json
 
     - name: Setup oak-terraform-linter dependencies
       shell: bash
@@ -49,14 +45,14 @@ runs:
 
     - name: Generate backend.tf from backend.tf.template
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
         find . -type f -name "backend.tf.template" -exec bash -c 'cp "$0" "${0%.template}"' {} \;
 
     - name: Generate terraform.tfvars from terraform.tfvars.example
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
         find . -type f -name "terraform.tfvars.example" -exec bash -c 'cp "$0" "${0%.example}"' {} \;
 
     - name: Check for .tflint.hcl file
@@ -98,8 +94,8 @@ runs:
 
     - name: "Checking Terraform Format of Files"
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
         terraform fmt -check $(find . -name '*tf')
 
     - name: "Validate Terraform Configs"

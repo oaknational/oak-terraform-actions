@@ -9,18 +9,17 @@ inputs:
 runs:
   using: "composite"
   steps:
-    - name: Copy oak-terraform-linter to workspace (for node_modules caching)
+    - name: Copy oak-terraform-linter to workspace (for npm caching)
       shell: bash
       run: |
         cp -r ${{ github.action_path }}/../../oak-terraform-linter ${{ github.workspace }}/oak-terraform-linter
 
-    - name: Cache oak-terraform-linter dependencies
-      uses: actions/cache@v4
+    - name: Setup Node.js with caching
+      uses: actions/setup-node@v4
       with:
-        path: oak-terraform-linter/node_modules
-        key: linter-${{ runner.os }}-${{ hashFiles('oak-terraform-linter/package-lock.json') }}
-        restore-keys: |
-          linter-${{ runner.os }}-
+        node-version: "20"
+        cache: npm
+        cache-dependency-path: oak-terraform-linter/package-lock.json
 
     - name: Setup oak-terraform-linter dependencies
       shell: bash

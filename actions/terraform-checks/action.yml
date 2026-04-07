@@ -16,9 +16,8 @@ runs:
 
     - name: Check backend.tf is gitignored in public repos
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
-        
         # Skip check for private repositories
         if [ "${{ github.event.repository.private }}" = "true" ]; then
           exit 0

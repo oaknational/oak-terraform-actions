@@ -10,17 +10,23 @@ runs:
   using: "composite"
   steps:
     - name: Copy oak-terraform-linter package-lock
-    # We cannot resolve relative paths in the setup-node step so copy it here to generate the cache key.
+    # We cannot set cache-dependency-path in the setup-node step to a file outside github.workspace.
+    # As a workaround copy the package-lock.json to github.workspace and delete it after setup-node step.
       shell: bash
       run: |
-        cp ${{ github.action_path }}/../../oak-terraform-linter/package-lock.json ${{ runner.temp }}/oak-linter-package-lock.json
+        cp ${{ github.action_path }}/../../oak-terraform-linter/package-lock.json ${{ github.workspace }}/oak-linter-package-lock.json
 
     - name: Setup Node.js with caching
       uses: actions/setup-node@v4
       with:
         node-version: "20"
         cache: npm
-        cache-dependency-path: ${{ runner.temp }}/oak-linter-package-lock.json
+        cache-dependency-path: ${{ github.workspace }}/oak-linter-package-lock.json
+
+    - name: Delete copied package-lock.json
+      shell: bash
+      run: |
+        rm ${{ github.workspace }}/oak-linter-package-lock.json
 
     - name: Setup oak-terraform-linter dependencies
       shell: bash

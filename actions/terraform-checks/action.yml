@@ -25,7 +25,7 @@ runs:
       shell: bash
       working-directory: oak-terraform-linter
       run: |
-        npm ci
+        npm ci --prefer-offline
         npm run build
 
     - name: Run oak-terraform-linter

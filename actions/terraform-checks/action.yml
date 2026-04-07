@@ -19,7 +19,7 @@ runs:
       with:
         node-version: "20"
         cache: npm
-        cache-dependency-path: oak-terraform-linter/package-lock.json
+        cache-dependency-path: ${{ github.workspace }}/oak-terraform-linter/package-lock.json
 
     - name: Setup oak-terraform-linter dependencies
       shell: bash

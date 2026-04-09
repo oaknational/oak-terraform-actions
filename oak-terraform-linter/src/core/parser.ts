@@ -3,6 +3,8 @@ import * as fs from "fs";
 import * as path from "path";
 import { TerraformFileContext, ParseOptions } from "./types";
 
+const TERRAFORM_EXTENSIONS = [".tf", ".tf.template"];
+
 export class TerraformParser {
   async parseFile(filePath: string): Promise<TerraformFileContext> {
     const fileContent = fs.readFileSync(filePath, "utf-8");
@@ -84,7 +86,7 @@ export class TerraformParser {
         if (options.recursive) {
           files.push(...this.findTerraformFiles(fullPath, options));
         }
-      } else if (entry.name.endsWith(".tf")) {
+      } else if (TERRAFORM_EXTENSIONS.some((ext) => entry.name.endsWith(ext))) {
         files.push(fullPath);
       }
     }

@@ -4,6 +4,7 @@ import { ResourceNamingRule } from "./rule-resource-naming";
 import { HelperPassingRule, HelperFailingRule, HelperErrorRule } from "./rule-helpers";
 import { VariableFileRule } from "./rule-variable-file";
 import { VercelProjectRule } from "./rule-vercel-project";
+import { TerraformBlockRule } from "./rule-terraform-block";
 
 const AVAILABLE_RULES: Record<string, new () => Rule> = {
   "helper-always-passes": HelperPassingRule,
@@ -12,9 +13,14 @@ const AVAILABLE_RULES: Record<string, new () => Rule> = {
   "resource-naming": ResourceNamingRule,
   "variable-file": VariableFileRule,
   "vercel-project": VercelProjectRule,
+  "terraform-block": TerraformBlockRule,
 };
 
-const DEFAULT_RULES: RuleConfig[] = [{ ruleType: "variable-file" }, { ruleType: "vercel-project" }];
+const DEFAULT_RULES: RuleConfig[] = [
+  { ruleType: "variable-file" },
+  { ruleType: "vercel-project" },
+  { ruleType: "terraform-block" },
+];
 
 export class RuleLoader {
   async loadRulesFromFile(filePath: string): Promise<Rule[]> {

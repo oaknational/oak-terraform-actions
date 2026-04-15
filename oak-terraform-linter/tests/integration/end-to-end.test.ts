@@ -30,6 +30,42 @@ describe("End-to-End Linting", () => {
     expect(allViolations.some((v) => v.ruleId === "oak-resource-naming-001")).toBe(true);
     expect(allViolations.some((v) => v.ruleId === "oak-variable-file-001")).toBe(true);
     expect(allViolations.some((v) => v.ruleId === "oak-vercel-project-001")).toBe(true);
+    expect(allViolations.some((v) => v.ruleId === "oak-terraform-block-001")).toBe(true);
+    const tfBlockViolations = allViolations.filter((v) => v.ruleId === "oak-terraform-block-001");
+    expect(tfBlockViolations.length).toBe(5);
+    expect(
+      tfBlockViolations.some((v) =>
+        v.message.includes("The file backend.tf should not exist in a public repo.")
+      )
+    ).toBe(true);
+    expect(
+      tfBlockViolations.some((v) =>
+        v.message.includes(
+          "Non-'cloud' properties in 'terraform' blocks should go in terraform.tf. Found non-'cloud' prop(s): required_version"
+        )
+      )
+    ).toBe(true);
+    expect(
+      tfBlockViolations.some((v) =>
+        v.message.includes(
+          `In 'cloud' configuration the 'organization' property should be set to "your-organization-name" as this is a public repo.`
+        )
+      )
+    ).toBe(true);
+    expect(
+      tfBlockViolations.some((v) =>
+        v.message.includes(
+          `No 'terraform' blocks are allowed outside of terraform.tf (and backend.tf/backend.tf.template for 'cloud' blocks)`
+        )
+      )
+    ).toBe(true);
+    expect(
+      tfBlockViolations.some((v) =>
+        v.message.includes(
+          `In a public repo 'terraform' blocks should not contain 'cloud' blocks outside of backend.tf.template`
+        )
+      )
+    ).toBe(true);
   });
 
   test("loads rules from config and passes clean Terraform files", async () => {

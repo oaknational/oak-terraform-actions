@@ -32,7 +32,7 @@ runs:
       shell: bash
       working-directory: ${{ github.action_path }}/../../oak-terraform-linter
       run: |
-        npm ci --omit=dev
+        npm ci
         npm run build
 
     - name: Run oak-terraform-linter

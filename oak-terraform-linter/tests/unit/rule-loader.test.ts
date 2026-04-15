@@ -21,9 +21,10 @@ describe("RuleLoader", () => {
   test("loads default rules", () => {
     const loader = new RuleLoader();
     const rules = loader.loadDefaultRules();
-    expect(rules.length).toBe(2);
+    expect(rules.length).toBe(3);
     expect(rules[0].id).toBe("oak-variable-file-001");
     expect(rules[1].id).toBe("oak-vercel-project-001");
+    expect(rules[2].id).toBe("oak-terraform-block-001");
   });
 
   test("loads rules from valid config file", async () => {

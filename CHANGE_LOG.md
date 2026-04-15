@@ -1,3 +1,10 @@
+# [1.12.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.11.0...v1.12.0) (2026-04-15)
+
+
+### Features
+
+* check backend.tf is gitignored in GH action [ENG-1503] ([#36](https://github.com/oaknational/oak-terraform-actions/issues/36)) ([e28e3d9](https://github.com/oaknational/oak-terraform-actions/commit/e28e3d9a5f72bd124180b48dbadc8f46f585f790))
+
 # [1.11.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.10.0...v1.11.0) (2026-04-09)
 
 

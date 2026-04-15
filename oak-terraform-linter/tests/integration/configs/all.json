@@ -11,6 +11,10 @@
     {
       "ruleType": "vercel-project",
       "enabled": true
+    },
+    {
+      "ruleType": "terraform-block",
+      "enabled": true
     }
   ]
 }

@@ -1,3 +1,10 @@
+# [1.11.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.10.0...v1.11.0) (2026-04-09)
+
+
+### Features
+
+* terraform block linter rule [ENG-1503][ENG-1507] ([#37](https://github.com/oaknational/oak-terraform-actions/issues/37)) ([f84052e](https://github.com/oaknational/oak-terraform-actions/commit/f84052e46be42786477eb3af09f38a81ae6956e0))
+
 # [1.10.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.9.0...v1.10.0) (2026-03-30)
 
 

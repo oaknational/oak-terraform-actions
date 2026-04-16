@@ -9,6 +9,41 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Copy oak-terraform-linter package-lock
+    # We cannot set cache-dependency-path in the setup-node step to a file outside github.workspace.
+    # As a workaround copy the package-lock.json to github.workspace and delete it after setup-node step.
+      shell: bash
+      run: |
+        cp ${{ github.action_path }}/../../oak-terraform-linter/package-lock.json ${{ github.workspace }}/oak-linter-package-lock.json
+
+    - name: Setup Node.js with caching
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+        cache: npm
+        cache-dependency-path: ${{ github.workspace }}/oak-linter-package-lock.json
+
+    - name: Delete copied package-lock.json
+      shell: bash
+      run: |
+        rm ${{ github.workspace }}/oak-linter-package-lock.json
+
+    - name: Setup oak-terraform-linter dependencies
+      shell: bash
+      working-directory: ${{ github.action_path }}/../../oak-terraform-linter
+      run: |
+        npm ci
+        npm run build
+
+    - name: Run oak-terraform-linter
+      shell: bash
+      working-directory: ${{ github.action_path }}/../../oak-terraform-linter
+      run: |
+        node dist/index.js \
+          --path "${{ github.workspace }}/${{ inputs.terraform_base_dir }}" \
+          --private-repo "${{ github.event.repository.private }}" \
+          --strict
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
@@ -31,14 +66,14 @@ runs:
 
     - name: Generate backend.tf from backend.tf.template
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
         find . -type f -name "backend.tf.template" -exec bash -c 'cp "$0" "${0%.template}"' {} \;
 
     - name: Generate terraform.tfvars from terraform.tfvars.example
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
         find . -type f -name "terraform.tfvars.example" -exec bash -c 'cp "$0" "${0%.example}"' {} \;
 
     - name: Check for .tflint.hcl file
@@ -80,8 +115,8 @@ runs:
 
     - name: "Checking Terraform Format of Files"
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
         terraform fmt -check $(find . -name '*tf')
 
     - name: "Validate Terraform Configs"

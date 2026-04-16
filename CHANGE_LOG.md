@@ -1,3 +1,10 @@
+# [1.13.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.12.1...v1.13.0) (2026-04-16)
+
+
+### Features
+
+* add terraform linter to the terraform-checks github action [ENG-1499] ([#39](https://github.com/oaknational/oak-terraform-actions/issues/39)) ([094defc](https://github.com/oaknational/oak-terraform-actions/commit/094defc9e8cf581dd63f10e5f52fd37473979473))
+
 ## [1.12.1](https://github.com/oaknational/oak-terraform-actions/compare/v1.12.0...v1.12.1) (2026-04-16)
 
 # [1.12.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.11.0...v1.12.0) (2026-04-15)

@@ -27,6 +27,12 @@ export class RuleLoader {
     try {
       const content = fs.readFileSync(filePath, "utf-8");
       const config = JSON.parse(content) as { rules: RuleConfig[] };
+      if (!config.rules || !Array.isArray(config.rules) || config.rules.length === 0) {
+        throw new Error(
+          "Config file JSON must have a 'rules' array with at least one rule defined."
+        );
+      }
+
       return this.instantiateRules(config.rules);
     } catch (error) {
       const message = error instanceof Error ? error.message : String(error);

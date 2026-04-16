@@ -1,3 +1,5 @@
+## [1.12.1](https://github.com/oaknational/oak-terraform-actions/compare/v1.12.0...v1.12.1) (2026-04-16)
+
 # [1.12.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.11.0...v1.12.0) (2026-04-15)
 
 

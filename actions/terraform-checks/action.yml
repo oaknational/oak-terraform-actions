@@ -6,6 +6,10 @@ inputs:
     description: Which base dir to search for the Terraform config(s) in
     required: false
     default: infrastructure
+  terraform_version:
+    description: Which version of Terraform to use for the checks
+    required: false
+    default: v1.14.9
 runs:
   using: "composite"
   steps:

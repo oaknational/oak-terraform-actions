@@ -1,3 +1,10 @@
+## [1.13.1](https://github.com/oaknational/oak-terraform-actions/compare/v1.13.0...v1.13.1) (2026-04-30)
+
+
+### Bug Fixes
+
+* pin terraform version in checks action ([1f34878](https://github.com/oaknational/oak-terraform-actions/commit/1f34878c8996360cb8549b5f12dcb2276b0dcd9d))
+
 # [1.13.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.12.1...v1.13.0) (2026-04-16)
 
 

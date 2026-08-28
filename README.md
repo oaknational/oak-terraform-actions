@@ -39,9 +39,15 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
       - name: Run Terraform Action from oak-terraform-actions
-        uses: oaknational/oak-terraform-actions/actions/terraform-checks/action.yml@main
+        uses: oaknational/oak-terraform-actions/actions/terraform-checks@a1fe3aea1efa31ee5d29e387d584c006a2d33bcc # v1.13.1
+```
+
+Every `uses:` must reference a **full-length commit SHA** (organisation policy; workflows fail at job setup otherwise). Keep the `# vX.Y.Z` comment alongside the SHA so Dependabot can propose updates. To find the SHA for a release of this repository:
+
+```bash
+gh api repos/oaknational/oak-terraform-actions/commits/v1.13.1 --jq .sha
 ```
 
 For more details, visit the [Oak Terraform Actions repository](https://github.com/oaknational/oak-terraform-actions).

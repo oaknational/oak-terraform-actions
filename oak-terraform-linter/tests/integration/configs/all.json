@@ -1,0 +1,20 @@
+{
+  "rules": [
+    {
+      "ruleType": "resource-naming",
+      "enabled": true
+    },
+    {
+      "ruleType": "variable-file",
+      "enabled": true
+    },
+    {
+      "ruleType": "vercel-project",
+      "enabled": true
+    },
+    {
+      "ruleType": "terraform-block",
+      "enabled": true
+    }
+  ]
+}

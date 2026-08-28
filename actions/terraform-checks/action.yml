@@ -6,24 +6,78 @@ inputs:
     description: Which base dir to search for the Terraform config(s) in
     required: false
     default: infrastructure
+  terraform_version:
+    description: Which version of Terraform to use for the checks
+    required: false
+    default: v1.14.9
 runs:
   using: "composite"
   steps:
+    - name: Copy oak-terraform-linter package-lock
+    # We cannot set cache-dependency-path in the setup-node step to a file outside github.workspace.
+    # As a workaround copy the package-lock.json to github.workspace and delete it after setup-node step.
+      shell: bash
+      run: |
+        cp ${{ github.action_path }}/../../oak-terraform-linter/package-lock.json ${{ github.workspace }}/oak-linter-package-lock.json
+
+    - name: Setup Node.js with caching
+      uses: actions/setup-node@v4
+      with:
+        node-version: "20"
+        cache: npm
+        cache-dependency-path: ${{ github.workspace }}/oak-linter-package-lock.json
+
+    - name: Delete copied package-lock.json
+      shell: bash
+      run: |
+        rm ${{ github.workspace }}/oak-linter-package-lock.json
+
+    - name: Setup oak-terraform-linter dependencies
+      shell: bash
+      working-directory: ${{ github.action_path }}/../../oak-terraform-linter
+      run: |
+        npm ci
+        npm run build
+
+    - name: Run oak-terraform-linter
+      shell: bash
+      working-directory: ${{ github.action_path }}/../../oak-terraform-linter
+      run: |
+        node dist/index.js \
+          --path "${{ github.workspace }}/${{ inputs.terraform_base_dir }}" \
+          --private-repo "${{ github.event.repository.private }}" \
+          --strict
+
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
       with:
         terraform_version: ${{ inputs.terraform_version }}
 
+    - name: Check backend.tf is gitignored in public repos
+      shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
+      run: |
+        # Skip check for private repositories
+        if [ "${{ github.event.repository.private }}" = "true" ]; then
+          exit 0
+        fi
+        
+        # Fail if backend.tf is not gitignored in public repos
+        if ! git check-ignore -q backend.tf; then
+          echo "ERROR: backend.tf is not gitignored in a public repository!"
+          exit 1
+        fi
+
     - name: Generate backend.tf from backend.tf.template
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
         find . -type f -name "backend.tf.template" -exec bash -c 'cp "$0" "${0%.template}"' {} \;
 
     - name: Generate terraform.tfvars from terraform.tfvars.example
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
         find . -type f -name "terraform.tfvars.example" -exec bash -c 'cp "$0" "${0%.example}"' {} \;
 
     - name: Check for .tflint.hcl file
@@ -65,8 +119,8 @@ runs:
 
     - name: "Checking Terraform Format of Files"
       shell: bash
+      working-directory: ${{ inputs.terraform_base_dir }}
       run: |
-        cd ${{ inputs.terraform_base_dir }}
         terraform fmt -check $(find . -name '*tf')
 
     - name: "Validate Terraform Configs"

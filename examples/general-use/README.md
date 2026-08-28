@@ -23,7 +23,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Run Terraform Action from oak-terraform-actions
-        uses: oaknational/oak-terraform-actions/actions/terraform-checks/action.yml@main
+        # Please update the commit hash to the latest release of terraform-checks action before using
+        uses: oaknational/oak-terraform-actions/actions/terraform-checks/action.yml@d61b1d03471eeae76166188994f41f3261c57f40 # v1.10.0
 ```
 
 ### Explanation

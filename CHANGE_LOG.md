@@ -1,3 +1,11 @@
+## [1.13.2](https://github.com/oaknational/oak-terraform-actions/compare/v1.13.1...v1.13.2) (2026-09-03)
+
+
+### Bug Fixes
+
+* **ci:** run semantic-release on Node 22 ([55e9fea](https://github.com/oaknational/oak-terraform-actions/commit/55e9feaaa940f1f09a98f30ed1af6e1f3cf73ad2)), closes [#16](https://github.com/oaknational/oak-terraform-actions/issues/16)
+* pin all third-party actions to full commit SHAs ([8204c5d](https://github.com/oaknational/oak-terraform-actions/commit/8204c5dee33a1513a1d196350b0cffb236250c18))
+
 ## [1.13.1](https://github.com/oaknational/oak-terraform-actions/compare/v1.13.0...v1.13.1) (2026-04-30)
 
 

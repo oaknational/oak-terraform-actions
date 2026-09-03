@@ -20,16 +20,17 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
 
       - name: Run Terraform Action from oak-terraform-actions
-        # Please update the commit hash to the latest release of terraform-checks action before using
-        uses: oaknational/oak-terraform-actions/actions/terraform-checks/action.yml@d61b1d03471eeae76166188994f41f3261c57f40 # v1.10.0
+        # Update the commit SHA (and version comment) to the latest release before using:
+        #   gh api repos/oaknational/oak-terraform-actions/commits/vX.Y.Z --jq .sha
+        uses: oaknational/oak-terraform-actions/actions/terraform-checks@a1fe3aea1efa31ee5d29e387d584c006a2d33bcc # v1.13.1
 ```
 
 ### Explanation
 
-- **uses: oaknational/oak-terraform-actions/actions/terraform@main**: Specifies the action from the `oak-terraform-actions` repository.
+- **uses: oaknational/oak-terraform-actions/actions/terraform-checks@\<commit-sha\> # vX.Y.Z**: Specifies the action from the `oak-terraform-actions` repository. Organisation policy requires every action to be pinned to a full-length commit SHA — tags such as `@main` or `@v4` are rejected at job setup. Keep the version comment so Dependabot can propose updates.
 - **example_input**: Replace this with the actual input parameters required by the Terraform action 😉.
 
 This setup allows you to incorporate the reusable Terraform action in your CI/CD workflows. For more details, visit the [oaknational/oak-terraform-actions repository](https://github.com/oaknational/oak-terraform-actions).

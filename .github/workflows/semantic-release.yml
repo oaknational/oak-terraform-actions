@@ -26,7 +26,7 @@ jobs:
     name: semantic release
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           # Need this to prevent the custom Github credentials on
           # the semantic release step being overridden with the
@@ -34,9 +34,9 @@ jobs:
           persist-credentials: false
 
       - name: Use Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
         with:
-          node-version: 20.x
+          node-version: 22.x
           cache: "npm"
 
       # Install.
@@ -56,7 +56,7 @@ jobs:
 
       - name: Report to Slack on failure
         if: ${{ steps.semantic_release.outcome == 'failure' }}
-        uses: rtCamp/action-slack-notify@v2
+        uses: rtCamp/action-slack-notify@33ca3be66c6f378fe1610fd1d5258632dbed5e58 # v2.4.0
         env:
           SLACK_COLOR: ${{ job.status }} # or a specific color like 'green' or '#ff00ff'
           SLACK_MESSAGE: "Semantic Release status: ${{ job.status }}"

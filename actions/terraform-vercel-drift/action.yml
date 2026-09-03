@@ -30,7 +30,7 @@ runs:
           echo "TF_CLOUD_ORGANIZATION=${{ inputs.TF_CLOUD_ORGANIZATION }}" >> $GITHUB_ENV
 
     - name: Upload Configuration
-      uses: hashicorp/tfc-workflows-github/actions/upload-configuration@v1.3.2
+      uses: hashicorp/tfc-workflows-github/actions/upload-configuration@8e08d1ba957673f5fbf971a22b3219639dc45661 # v1.3.2
       id: plan-upload
       with:
         workspace: ${{ inputs.TF_WORKSPACE }}
@@ -38,7 +38,7 @@ runs:
         speculative: true
 
     - name: Create Plan Run
-      uses: hashicorp/tfc-workflows-github/actions/create-run@v1.3.2
+      uses: hashicorp/tfc-workflows-github/actions/create-run@8e08d1ba957673f5fbf971a22b3219639dc45661 # v1.3.2
       id: plan-run
       with:
         workspace: ${{ inputs.TF_WORKSPACE }}
@@ -47,7 +47,7 @@ runs:
         message: "Drift detection check from GitHub Actions - Run ${{ github.run_id }}"
 
     - name: Get Plan Output
-      uses: hashicorp/tfc-workflows-github/actions/plan-output@v1.3.2
+      uses: hashicorp/tfc-workflows-github/actions/plan-output@8e08d1ba957673f5fbf971a22b3219639dc45661 # v1.3.2
       id: plan-output
       with:
         plan: ${{ fromJSON(steps.plan-run.outputs.payload).data.relationships.plan.data.id }}

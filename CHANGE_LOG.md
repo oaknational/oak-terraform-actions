@@ -1,3 +1,10 @@
+## [1.13.3](https://github.com/oaknational/oak-terraform-actions/compare/v1.13.2...v1.13.3) (2026-11-03)
+
+
+### Bug Fixes
+
+* **node:** upgrade to patched Node 24 ([98100fb](https://github.com/oaknational/oak-terraform-actions/commit/98100fb0b0eed29d663715e7af8a125879c3d835))
+
 ## [1.13.2](https://github.com/oaknational/oak-terraform-actions/compare/v1.13.1...v1.13.2) (2026-09-03)
 
 

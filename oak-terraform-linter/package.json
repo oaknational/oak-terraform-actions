@@ -4,6 +4,9 @@
   "description": "Custom rule-based linter for Terraform code",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "engines": {
+    "node": ">=24.22.1 <25"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/oaknational/oak-terraform-linter"

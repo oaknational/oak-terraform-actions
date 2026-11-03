@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "The `actions` folder is designed to house reusable GitHub Actions for **Terraform**, making it easy to manage and share automation across different repositories. See the Example folder to get started.",
   "main": "index.js",
+  "engines": {
+    "node": ">=24.22.1 <25"
+  },
   "directories": {
     "example": "examples"
   },

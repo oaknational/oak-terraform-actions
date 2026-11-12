@@ -1,0 +1,43 @@
+---
+# Example Github Workflow file to run the Vercel Drift Detection action
+# in a repo with one Terraform workspace per Vercel project, each configured
+# in its own infrastructure/project-<name> folder.
+# A repo with a single infrastructure/project folder can drop the matrix and
+# TF_BASE_DIRECTORY, which defaults to infrastructure/project.
+name: Terraform Drift Detection
+
+on:  # yamllint disable-line rule:truthy
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  check-drift:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - directory: infrastructure/project-web
+            workspace: example-repo-project-web
+          - directory: infrastructure/project-api
+            workspace: example-repo-project-api
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+
+      - name: Run Drift Detection
+        # Update the commit SHA (and version comment) to the latest release before using:
+        #   gh api repos/oaknational/oak-terraform-actions/commits/vX.Y.Z --jq .sha
+        uses: oaknational/oak-terraform-actions/actions/terraform-vercel-drift@a1fe3aea1efa31ee5d29e387d584c006a2d33bcc # v1.13.1
+        with:
+          TF_API_TOKEN: ${{ secrets.TF_API_TOKEN }}
+          TF_CLOUD_ORGANIZATION: ${{ vars.TF_CLOUD_ORGANIZATION }}
+          TF_WORKSPACE: ${{ matrix.workspace }}
+          TF_BASE_DIRECTORY: ${{ matrix.directory }}
+          VERCEL_DRIFT_DETECTION_SLACK_TOKEN: ${{ secrets.VERCEL_DRIFT_DETECTION_SLACK_TOKEN }}
+          VERCEL_DRIFT_DETECTION_SLACK_CHANNEL_ID: ${{ secrets.VERCEL_DRIFT_DETECTION_SLACK_CHANNEL_ID }}

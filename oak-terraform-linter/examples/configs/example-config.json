@@ -7,6 +7,10 @@
     {
       "ruleType": "variable-file",
       "enabled": true
+    },
+    {
+      "ruleType": "vercel-project",
+      "enabled": true
     }
   ]
 }

@@ -254,4 +254,48 @@ describe("VercelProjectRule", () => {
     const violations = rule.validate(context, {});
     expect(violations).toHaveLength(0);
   });
+
+  const vercelModuleAt = (filePath: string): TerraformFileContext => ({
+    hcl: {
+      module: {
+        vercel: [
+          {
+            source: "github.com/oaknational/oak-terraform-modules//modules/vercel_project",
+          },
+        ],
+      },
+    },
+    filePath,
+    fileContent: "",
+  });
+
+  test.each([
+    "infrastructure/project-mutation-api/main.tf",
+    "infrastructure/project-api/main.tf",
+    "infrastructure/project-v2/main.tf",
+    "./infrastructure/project-mutation-api/main.tf",
+    "a/longer/path/to/infrastructure/project-harness/main.tf",
+    "/abs/repo/infrastructure/project/main.tf",
+  ])("allows vercel_project in %s", (filePath) => {
+    expect(rule.validate(vercelModuleAt(filePath), {})).toHaveLength(0);
+  });
+
+  test.each([
+    "infrastructure/project-/main.tf",
+    "infrastructure/project--api/main.tf",
+    "infrastructure/project-api-/main.tf",
+    "infrastructure/project_api/main.tf",
+    "infrastructure/projects/main.tf",
+    "infrastructure/project-API/main.tf",
+    "infrastructure/project-api/nested/main.tf",
+    "infrastructure/project/nested/main.tf",
+    "infra/project-api/main.tf",
+    "project-api/main.tf",
+    "main.tf",
+  ])("rejects vercel_project in %s", (filePath) => {
+    const violations = rule.validate(vercelModuleAt(filePath), {});
+    expect(violations).toHaveLength(1);
+    expect(violations[0].ruleId).toBe("oak-vercel-project-001");
+    expect(violations[0].message).toContain("infrastructure/project-<name>");
+  });
 });

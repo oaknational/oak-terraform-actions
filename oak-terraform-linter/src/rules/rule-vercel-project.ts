@@ -1,11 +1,21 @@
 import { Rule, TerraformFileContext, ExecutionContext, LintViolation } from "../core/types";
-import path from "path";
+
+const PROJECT_DIRECTORY = /^project(-[a-z0-9]+)*$/;
+
+function isInProjectDirectory(filePath: string): boolean {
+  const segments = filePath.split(/[\\/]/);
+  return (
+    segments.length >= 3 &&
+    segments[segments.length - 3] === "infrastructure" &&
+    PROJECT_DIRECTORY.test(segments[segments.length - 2])
+  );
+}
 
 export class VercelProjectRule implements Rule {
   id = "oak-vercel-project-001";
   name = "Vercel Project Module Location";
   description =
-    "If the Oak 'vercel_project' module is used, the configuration should be under the path 'infrastructure/project'.";
+    "If the Oak 'vercel_project' module is used, the configuration should be under the path 'infrastructure/project' or 'infrastructure/project-<name>'.";
   severity = "error" as const;
   params: Record<string, unknown> = {};
 
@@ -33,19 +43,14 @@ export class VercelProjectRule implements Rule {
         continue;
       }
 
-      const absolutePath = path.resolve(__dirname, context.filePath);
-      if (
-        !absolutePath.endsWith(
-          path.join("infrastructure", "project", path.basename(context.filePath))
-        )
-      ) {
+      if (!isInProjectDirectory(context.filePath)) {
         violations.push({
           ruleId: this.id,
           ruleName: this.name,
           severity: this.severity,
           filePath: context.filePath,
-          message: `The 'vercel_project' module should be used in files located under 'infrastructure/project/'`,
-          suggestion: `Configure the 'vercel_project' module in a file at the root of 'infrastructure/project/'`,
+          message: `The 'vercel_project' module should be used in files located under 'infrastructure/project/' or 'infrastructure/project-<name>/'`,
+          suggestion: `Configure the 'vercel_project' module in a file at the root of 'infrastructure/project/', or of 'infrastructure/project-<name>/' when a repo has more than one Vercel project`,
         });
       }
     }

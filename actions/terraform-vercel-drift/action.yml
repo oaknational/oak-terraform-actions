@@ -12,6 +12,7 @@ inputs:
     description: 'Terraform Cloud workspace name'
     required: true
   TF_BASE_DIRECTORY:
+    description: 'Directory holding the vercel_project configuration: infrastructure/project, or infrastructure/project-<name> when a repo has one workspace per Vercel project'
     default: "infrastructure/project"
   VERCEL_DRIFT_DETECTION_SLACK_TOKEN:
     description: 'Slack bot token for notifications'

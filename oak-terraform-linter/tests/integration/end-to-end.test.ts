@@ -29,7 +29,15 @@ describe("End-to-End Linting", () => {
     expect(allViolations.length).toBeGreaterThan(0);
     expect(allViolations.some((v) => v.ruleId === "oak-resource-naming-001")).toBe(true);
     expect(allViolations.some((v) => v.ruleId === "oak-variable-file-001")).toBe(true);
-    expect(allViolations.some((v) => v.ruleId === "oak-vercel-project-001")).toBe(true);
+    const vercelProjectViolations = allViolations.filter(
+      (v) => v.ruleId === "oak-vercel-project-001"
+    );
+    expect(
+      vercelProjectViolations.map((v) => path.relative(fixtureDir, v.filePath)).sort()
+    ).toEqual([
+      path.join("infrastructure", "project_api", "vercel.tf"),
+      path.join("nested", "modules.tf"),
+    ]);
     expect(allViolations.some((v) => v.ruleId === "oak-terraform-block-001")).toBe(true);
     const tfBlockViolations = allViolations.filter((v) => v.ruleId === "oak-terraform-block-001");
     expect(tfBlockViolations.length).toBe(5);

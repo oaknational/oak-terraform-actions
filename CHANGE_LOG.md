@@ -1,3 +1,10 @@
+# [1.14.0](https://github.com/oaknational/oak-terraform-actions/compare/v1.13.3...v1.14.0) (2026-11-12)
+
+
+### Features
+
+* **linter:** allow vercel_project in infrastructure/project-<name> ([a9a25da](https://github.com/oaknational/oak-terraform-actions/commit/a9a25dacb389227b613b645fef113e3fa63626fe))
+
 ## [1.13.3](https://github.com/oaknational/oak-terraform-actions/compare/v1.13.2...v1.13.3) (2026-11-03)
 
 
